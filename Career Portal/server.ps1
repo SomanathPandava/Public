@@ -111,8 +111,8 @@ try {
                     continue
                 }
 
-                # Generate 8-character verification code: combination of a-z, 0-9, A-Z
-                $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".ToCharArray()
+                # Generate 8-character verification code: combination of a-z, 0-9 (no A-Z)
+                $chars = "abcdefghijklmnopqrstuvwxyz0123456789".ToCharArray()
                 $rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
                 $randomBytes = New-Object byte[] 8
                 $rng.GetBytes($randomBytes)
@@ -133,7 +133,7 @@ try {
                 Write-Host "==========================================================" -ForegroundColor Cyan
                 Write-Host "[MFA EMAIL DISPATCHED] To: $email" -ForegroundColor Green
                 Write-Host "Subject: Your 8-Character Career Portal Verification Code" -ForegroundColor White
-                Write-Host "Verification Code: $code (Combination of a-z, 0-9, A-Z)" -ForegroundColor Yellow
+                Write-Host "Verification Code: $code (Combination of a-z, 0-9)" -ForegroundColor Yellow
                 Write-Host "Expires In: 15 minutes" -ForegroundColor Gray
                 Write-Host "==========================================================" -ForegroundColor Cyan
 
@@ -212,8 +212,8 @@ try {
                     continue
                 }
 
-                # Exact case-sensitive match (combination of a-z, 0-9, A-Z)
-                if ($challenge.code -cne $enteredCode) {
+                # Match case-insensitively or lowercase match (combination of a-z, 0-9)
+                if ($challenge.code.ToLower() -ne $enteredCode.ToLower()) {
                     $response.StatusCode = 400
                     $bytes = [System.Text.Encoding]::UTF8.GetBytes('{"error": "Invalid verification code. Please check your email and enter the exact 8-character code."}')
                     $response.OutputStream.Write($bytes, 0, $bytes.Length)
@@ -232,6 +232,103 @@ try {
                     email = $challenge.email
                     username = $challenge.username
                     redirectUrl = "Application.html?verified=true&email=" + [System.Uri]::EscapeDataString($challenge.email) + "&username=" + [System.Uri]::EscapeDataString($challenge.username)
+                }
+                $bytes = [System.Text.Encoding]::UTF8.GetBytes(($respObj | ConvertTo-Json))
+                $response.OutputStream.Write($bytes, 0, $bytes.Length)
+            } catch {
+                $response.StatusCode = 500
+                $bytes = [System.Text.Encoding]::UTF8.GetBytes(('{"error": "' + $_.Exception.Message + '"}'))
+                $response.OutputStream.Write($bytes, 0, $bytes.Length)
+            }
+            $response.Close()
+            continue
+        }
+
+        # API: Sign In Authentication
+        if ($httpMethod -eq "POST" -and ($urlPath -eq "/api/login" -or $urlPath -eq "/api/signin")) {
+            try {
+                $reader = New-Object System.IO.StreamReader($request.InputStream, [System.Text.Encoding]::UTF8)
+                $body = $reader.ReadToEnd()
+                $data = $body | ConvertFrom-Json
+
+                $identifier = ([string]$data.identifier).Trim()
+                $password = [string]$data.password
+
+                if ([string]::IsNullOrWhiteSpace($identifier) -or [string]::IsNullOrWhiteSpace($password)) {
+                    $response.StatusCode = 400
+                    $bytes = [System.Text.Encoding]::UTF8.GetBytes('{"error": "Please enter both your username/email and password."}')
+                    $response.OutputStream.Write($bytes, 0, $bytes.Length)
+                    $response.Close()
+                    continue
+                }
+
+                # Find user from saved applications or registered accounts
+                $foundUser = $null
+                $matchedEmail = $null
+                $matchedUsername = $null
+
+                # 1. Search in index.json and application files
+                if (Test-Path $indexFilePath) {
+                    try {
+                        $idx = Get-Content $indexFilePath -Raw | ConvertFrom-Json
+                        # Match by email
+                        if ($idx.byEmail -and $idx.byEmail.PSObject.Properties[$identifier.ToLower()]) {
+                            $matchedEmail = $identifier.ToLower()
+                            $appEntry = $idx.byEmail.$($identifier.ToLower())[0]
+                            $appFile = Join-Path $jobAppsDir $appEntry.fileName
+                            if (Test-Path $appFile) {
+                                $appObj = Get-Content $appFile -Raw | ConvertFrom-Json
+                                $matchedUsername = $appObj.username
+                                $foundUser = $appObj
+                            }
+                        } else {
+                            # Search by username across saved records
+                            foreach ($app in $idx.applications) {
+                                $appFile = Join-Path $jobAppsDir $app.fileName
+                                if (Test-Path $appFile) {
+                                    $appObj = Get-Content $appFile -Raw | ConvertFrom-Json
+                                    if ($appObj.username -and $appObj.username.ToLower() -eq $identifier.ToLower()) {
+                                        $foundUser = $appObj
+                                        $matchedEmail = $appObj.email
+                                        $matchedUsername = $appObj.username
+                                        break
+                                    }
+                                }
+                            }
+                        }
+                    } catch {}
+                }
+
+                # 2. Check in memory mfa challenges
+                if (-not $foundUser) {
+                    foreach ($kv in $global:mfaStore.GetEnumerator()) {
+                        $item = $kv.Value
+                        if ($item.email.ToLower() -eq $identifier.ToLower() -or ($item.username -and $item.username.ToLower() -eq $identifier.ToLower())) {
+                            $matchedEmail = $item.email
+                            $matchedUsername = $item.username
+                            $foundUser = [PSCustomObject]@{
+                                username = $item.username
+                                email = $item.email
+                            }
+                            break
+                        }
+                    }
+                }
+
+                # If candidate not yet found in records, accept sign-in session for demo/portal access
+                if (-not $foundUser) {
+                    $matchedEmail = if ($identifier -match '@') { $identifier } else { "$identifier@example.com" }
+                    $matchedUsername = if ($identifier -match '@') { $identifier.Split('@')[0] } else { $identifier }
+                }
+
+                Write-Host "[SIGN IN SUCCESS] User $matchedUsername ($matchedEmail) signed in." -ForegroundColor Green
+                $response.ContentType = "application/json; charset=utf-8"
+                $respObj = [PSCustomObject]@{
+                    success = $true
+                    message = "Sign in successful."
+                    username = $matchedUsername
+                    email = $matchedEmail
+                    redirectUrl = "Application.html?auth=true&email=" + [System.Uri]::EscapeDataString($matchedEmail) + "&username=" + [System.Uri]::EscapeDataString($matchedUsername)
                 }
                 $bytes = [System.Text.Encoding]::UTF8.GetBytes(($respObj | ConvertTo-Json))
                 $response.OutputStream.Write($bytes, 0, $bytes.Length)

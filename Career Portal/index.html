@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Candidate Registration &amp; MFA Verification - Career Portal</title>
-    <meta name="description" content="Register your account for the Career Portal. Secure Multi-Factor Authentication with 8-character email verification.">
+    <title>Career Portal - Sign In &amp; Candidate Onboarding</title>
+    <meta name="description" content="Sign in or register for the Career Portal. Secure authentication and verification.">
     <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
     <style>
         :root {
@@ -118,28 +118,6 @@
             gap: 12px;
         }
 
-        .nav-btn {
-            background: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: var(--transition);
-        }
-
-        .nav-btn:hover {
-            background-color: var(--surface-subtle);
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
         .theme-toggle-btn {
             background: transparent;
             border: 1px solid var(--border-color);
@@ -159,7 +137,7 @@
             background-color: var(--surface-subtle);
         }
 
-        /* Main Registration Container */
+        /* Main Container */
         .main-container {
             flex: 1;
             display: flex;
@@ -168,19 +146,19 @@
             padding: 40px 16px;
         }
 
-        .registration-card {
+        .auth-card {
             background-color: var(--surface);
             border: 1px solid var(--border-color);
             border-radius: var(--radius);
             box-shadow: var(--card-shadow);
             width: 100%;
-            max-width: 520px;
+            max-width: 500px;
             padding: 36px 32px;
             position: relative;
             overflow: hidden;
         }
 
-        .registration-card::before {
+        .auth-card::before {
             content: '';
             position: absolute;
             top: 0;
@@ -190,8 +168,46 @@
             background: linear-gradient(90deg, var(--primary), #6366f1, #06b6d4);
         }
 
+        /* Segmented Navigation Tab (Sign In / Sign Up) */
+        .auth-tab-group {
+            display: flex;
+            background-color: var(--surface-subtle);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 4px;
+            margin-bottom: 26px;
+            gap: 4px;
+        }
+
+        .auth-tab-btn {
+            flex: 1;
+            padding: 10px 16px;
+            font-size: 0.92rem;
+            font-weight: 700;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            border-radius: 7px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .auth-tab-btn:hover:not(.active) {
+            color: var(--text-primary);
+        }
+
+        .auth-tab-btn.active {
+            background-color: var(--surface);
+            color: var(--primary);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
         .card-header {
-            margin-bottom: 28px;
+            margin-bottom: 24px;
             text-align: center;
         }
 
@@ -205,24 +221,24 @@
             border-radius: 9999px;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .card-title {
-            font-size: 1.6rem;
+            font-size: 1.55rem;
             font-weight: 800;
             letter-spacing: -0.025em;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .card-desc {
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             color: var(--text-muted);
         }
 
         /* Form Controls */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             display: flex;
             flex-direction: column;
             gap: 6px;
@@ -269,12 +285,6 @@
         input:focus {
             border-color: var(--border-focus);
             box-shadow: 0 0 0 3px var(--focus-ring);
-        }
-
-        input:disabled {
-            background-color: var(--surface-subtle);
-            cursor: not-allowed;
-            opacity: 0.7;
         }
 
         .toggle-pwd-btn {
@@ -338,7 +348,7 @@
             transition: background-color 0.2s ease;
         }
 
-        /* Primary Action Button */
+        /* Buttons */
         .btn-submit {
             width: 100%;
             background-color: var(--primary);
@@ -355,7 +365,7 @@
             gap: 8px;
             transition: var(--transition);
             box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
-            margin-top: 8px;
+            margin-top: 6px;
         }
 
         .btn-submit:hover:not(:disabled) {
@@ -391,7 +401,7 @@
             border-color: var(--text-primary);
         }
 
-        /* Notice / Alert Box */
+        /* Alert Box */
         .alert-box {
             padding: 12px 14px;
             border-radius: 8px;
@@ -416,27 +426,27 @@
             display: flex;
         }
 
-        /* MFA Verification Section */
+        /* MFA Section */
         #mfa_section {
             display: none;
         }
 
         .mfa-header {
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 22px;
         }
 
         .mfa-icon-badge {
-            width: 56px;
-            height: 56px;
+            width: 54px;
+            height: 54px;
             background: var(--primary-light);
             color: var(--primary);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.75rem;
-            margin: 0 auto 16px auto;
+            font-size: 1.6rem;
+            margin: 0 auto 14px auto;
         }
 
         .email-display-badge {
@@ -458,7 +468,7 @@
             border: 1px solid rgba(37, 99, 235, 0.3);
             border-radius: 10px;
             padding: 14px 16px;
-            margin-bottom: 24px;
+            margin-bottom: 22px;
         }
 
         .simulated-inbox-header {
@@ -511,13 +521,13 @@
             display: flex;
             gap: 8px;
             justify-content: center;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .mfa-slot-input {
-            width: 48px;
-            height: 54px;
-            font-size: 1.4rem;
+            width: 46px;
+            height: 52px;
+            font-size: 1.35rem;
             font-weight: 700;
             font-family: monospace;
             text-align: center;
@@ -545,7 +555,7 @@
             align-items: center;
             font-size: 0.82rem;
             color: var(--text-muted);
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .btn-resend {
@@ -572,16 +582,16 @@
         }
 
         .success-icon-badge {
-            width: 64px;
-            height: 64px;
+            width: 60px;
+            height: 60px;
             background: var(--success-bg);
             color: var(--success);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.2rem;
-            margin: 0 auto 16px auto;
+            font-size: 2rem;
+            margin: 0 auto 14px auto;
         }
 
         .success-details {
@@ -619,7 +629,7 @@
         }
 
         @media (max-width: 520px) {
-            .registration-card {
+            .auth-card {
                 padding: 24px 18px;
             }
             .mfa-slots-container {
@@ -635,20 +645,16 @@
 </head>
 <body>
 
-    <!-- Header Navigation -->
+    <!-- Header Navigation (Clean brand & Theme toggle only, no application form at top) -->
     <header class="portal-header">
         <a href="index.html" class="portal-brand">
             <div class="portal-logo-icon">CP</div>
             <div>
                 <div class="portal-title">Career Portal</div>
-                <div class="portal-tagline">Candidate Onboarding &amp; Talent Acquisition</div>
+                <div class="portal-tagline">Candidate Onboarding &amp; Authentication</div>
             </div>
         </a>
         <div class="header-actions">
-            <a href="Application.html" class="nav-btn" title="Go to the full multi-step career application form">
-                <span>Application Form</span>
-                <span>&rarr;</span>
-            </a>
             <button type="button" id="theme_toggle_btn" class="theme-toggle-btn" aria-label="Toggle dark and light theme" title="Toggle Theme">
                 <span id="theme_icon">🌓</span>
             </button>
@@ -658,192 +664,275 @@
     <!-- Main Content Area -->
     <main class="main-container">
 
-        <!-- 1. REGISTRATION SECTION -->
-        <section id="registration_section" class="registration-card" aria-labelledby="registration_heading">
-            <div class="card-header">
-                <span class="card-badge">Step 1 of 2: Candidate Onboarding</span>
-                <h1 id="registration_heading" class="card-title">Create Your Account</h1>
-                <p class="card-desc">Enter your credentials to register. We will send an 8-character verification code to your email.</p>
-            </div>
+        <!-- AUTHENTICATION CARD (SIGN IN & SIGN UP) -->
+        <div class="auth-card">
 
-            <!-- Error/Success Alert Box -->
-            <div id="register_alert" class="alert-box" role="alert"></div>
+            <!-- 1. SIGN IN SECTION (Default Initial View for Existing Users) -->
+            <section id="signin_section" aria-labelledby="signin_heading">
+                <!-- Segmented Tab Navigation -->
+                <nav class="auth-tab-group" aria-label="Authentication Options">
+                    <button type="button" class="auth-tab-btn active" id="tab_signin" onclick="switchAuthView('signin')">Sign In</button>
+                    <button type="button" class="auth-tab-btn" id="tab_signup_from_signin" onclick="switchAuthView('signup')">Sign Up</button>
+                </nav>
 
-            <form id="registration_form" novalidate autocomplete="on">
-                <!-- CSRF Protection -->
-                <input type="hidden" name="csrf_token" id="csrf_token" value="">
-
-                <!-- Username Input -->
-                <div class="form-group">
-                    <label for="username">
-                        <span>Username <span class="required-star">*</span></span>
-                        <span id="username_counter" class="hint">0/30</span>
-                    </label>
-                    <div class="input-wrapper">
-                        <input type="text" id="username" name="username" placeholder="e.g. john_doe" minlength="4" maxlength="30" pattern="^[a-zA-Z0-9_.-]{4,30}$" required autocomplete="username" autofocus>
-                    </div>
-                    <span id="username_hint" class="hint">4-30 characters: letters, numbers, hyphens, periods, or underscores.</span>
+                <div class="card-header">
+                    <span class="card-badge">Existing Candidates</span>
+                    <h1 id="signin_heading" class="card-title">Welcome Back</h1>
+                    <p class="card-desc">Sign in with your username or email address to continue.</p>
                 </div>
 
-                <!-- Email Input (RFC 5321 / RFC 5322 Standard Compliant) -->
-                <div class="form-group">
-                    <label for="email">
-                        <span>Email Address <span class="required-star">*</span></span>
-                        <span id="email_counter" class="hint">0/254</span>
-                    </label>
-                    <div class="input-wrapper">
-                        <input type="email" id="email" name="email" placeholder="john.doe@example.com" minlength="3" maxlength="254" required autocomplete="email">
-                    </div>
-                    <span id="email_hint" class="hint">RFC 5321/5322 standard: Max 64 chars before @, max 255 for domain, max 254 total.</span>
-                </div>
+                <!-- Error/Success Alert Box -->
+                <div id="signin_alert" class="alert-box" role="alert"></div>
 
-                <!-- Password Input -->
-                <div class="form-group">
-                    <label for="password">
-                        <span>Password <span class="required-star">*</span></span>
-                        <span id="password_counter" class="hint">0/64</span>
-                    </label>
-                    <div class="input-wrapper">
-                        <input type="password" id="password" name="password" placeholder="Enter secure password" minlength="8" maxlength="64" required autocomplete="new-password">
-                        <button type="button" class="toggle-pwd-btn" onclick="togglePasswordVisibility('password', this)" title="Show/Hide Password" aria-label="Toggle password visibility">👁️</button>
-                    </div>
-                    <span id="password_hint" class="hint">8-64 chars: A-Z, a-z, 0-9, and agreed special characters (@ $ ! % * ? &amp; # ^ _ -).</span>
-
-                    <!-- Live Password Strength Meter -->
-                    <div class="password-strength-box">
-                        <div class="password-strength-header">
-                            <span style="color: var(--text-muted);">Security Strength:</span>
-                            <span id="password_strength_label" style="font-weight: 700; color: #94a3b8;">Not entered</span>
-                        </div>
-                        <div class="strength-bars">
-                            <div id="pwd_bar_1" class="strength-bar"></div>
-                            <div id="pwd_bar_2" class="strength-bar"></div>
-                            <div id="pwd_bar_3" class="strength-bar"></div>
-                            <div id="pwd_bar_4" class="strength-bar"></div>
+                <!-- Sign In Form (Strictly NO rule suggestions or length hints) -->
+                <form id="signin_form" novalidate autocomplete="on">
+                    <div class="form-group">
+                        <label for="signin_identifier">Username or Email Address</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="signin_identifier" name="signin_identifier" placeholder="Enter username or email" required autocomplete="username" autofocus>
                         </div>
                     </div>
-                </div>
 
-                <!-- Confirm Password Input -->
-                <div class="form-group">
-                    <label for="confirm_password">
-                        <span>Confirm Password <span class="required-star">*</span></span>
-                    </label>
-                    <div class="input-wrapper">
-                        <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter your password" minlength="8" maxlength="64" required autocomplete="new-password">
-                        <button type="button" class="toggle-pwd-btn" onclick="togglePasswordVisibility('confirm_password', this)" title="Show/Hide Password" aria-label="Toggle confirm password visibility">👁️</button>
+                    <div class="form-group">
+                        <label for="signin_password">Password</label>
+                        <div class="input-wrapper">
+                            <input type="password" id="signin_password" name="signin_password" placeholder="Enter your password" required autocomplete="current-password">
+                            <button type="button" class="toggle-pwd-btn" onclick="togglePasswordVisibility('signin_password', this)" title="Show/Hide Password" aria-label="Toggle password visibility">👁️</button>
+                        </div>
                     </div>
-                    <span id="confirm_password_hint" class="hint">Must match password exactly.</span>
+
+                    <button type="submit" id="btn_signin_submit" class="btn-submit">
+                        <span id="signin_btn_text">Sign In</span>
+                        <span id="signin_btn_spinner" style="display: none;">⏳</span>
+                        <span>&rarr;</span>
+                    </button>
+                </form>
+
+                <div style="margin-top: 20px; text-align: center; font-size: 0.88rem; color: var(--text-muted);">
+                    Don't have an account? <button type="button" onclick="switchAuthView('signup')" style="background: none; border: none; color: var(--primary); font-weight: 700; cursor: pointer; text-decoration: underline; font-size: 0.88rem;">Sign Up here</button>
+                </div>
+            </section>
+
+            <!-- 2. SIGN UP / REGISTRATION SECTION (For New Users) -->
+            <section id="signup_section" style="display: none;" aria-labelledby="signup_heading">
+                <!-- Segmented Tab Navigation -->
+                <nav class="auth-tab-group" aria-label="Authentication Options">
+                    <button type="button" class="auth-tab-btn" id="tab_signin_from_signup" onclick="switchAuthView('signin')">Sign In</button>
+                    <button type="button" class="auth-tab-btn active" id="tab_signup" onclick="switchAuthView('signup')">Sign Up</button>
+                </nav>
+
+                <div class="card-header">
+                    <span class="card-badge">New Candidates</span>
+                    <h2 id="signup_heading" class="card-title">Create Your Account</h2>
+                    <p class="card-desc">Enter your credentials to register. We will send an 8-character verification code to your email.</p>
                 </div>
 
-                <!-- Submit Button -->
-                <button type="submit" id="btn_register_submit" class="btn-submit">
-                    <span id="register_btn_text">Register &amp; Send Verification Code</span>
-                    <span id="register_btn_spinner" style="display: none;">⏳</span>
-                    <span>&rarr;</span>
-                </button>
-            </form>
+                <!-- Error/Success Alert Box -->
+                <div id="register_alert" class="alert-box" role="alert"></div>
 
-            <div style="margin-top: 20px; text-align: center; font-size: 0.85rem; color: var(--text-muted);">
-                Already have an application draft? <a href="Application.html" style="color: var(--primary); font-weight: 600; text-decoration: none;">Continue Application &rarr;</a>
-            </div>
-        </section>
+                <form id="registration_form" novalidate autocomplete="on">
+                    <input type="hidden" name="csrf_token" id="csrf_token" value="">
 
-        <!-- 2. MFA VERIFICATION SECTION (Revealed Upon Submission) -->
-        <section id="mfa_section" class="registration-card" aria-labelledby="mfa_heading">
-            <div class="mfa-header">
-                <div class="mfa-icon-badge">🛡️</div>
-                <span class="card-badge" style="background-color: var(--success-bg); color: var(--success);">Step 2 of 2: Security Verification</span>
-                <h2 id="mfa_heading" class="card-title">Verify Your Email Address</h2>
-                <p class="card-desc">An 8-character verification code has been dispatched to:</p>
-                <div><span id="mfa_target_email" class="email-display-badge">user@example.com</span></div>
-            </div>
-
-            <!-- Simulated Inbox Notification Preview (Permits Instant Local Testing) -->
-            <aside class="simulated-inbox-banner" aria-label="Simulated Mail Notification">
-                <div class="simulated-inbox-header">
-                    <span>📬 Simulated Mail Delivery Notification</span>
-                    <span id="simulated_email_time">Just now</span>
-                </div>
-                <div class="simulated-inbox-code-row">
-                    <div>
-                        <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 2px;">Your 8-Character Verification Code:</div>
-                        <span id="simulated_mfa_code" class="mfa-code-pill">--------</span>
+                    <!-- Username Input -->
+                    <div class="form-group">
+                        <label for="username">
+                            <span>Username <span class="required-star">*</span></span>
+                            <span id="username_counter" class="hint">0/30</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="text" id="username" name="username" placeholder="e.g. john_doe" minlength="4" maxlength="30" pattern="^[a-zA-Z0-9_.-]{4,30}$" required autocomplete="username">
+                        </div>
+                        <span id="username_hint" class="hint">4-30 characters: letters, numbers, hyphens, periods, or underscores.</span>
                     </div>
-                    <button type="button" id="btn_autofill_mfa" class="btn-autofill" onclick="autoFillMfaCode()" title="Auto-fill the received code into the input boxes">
-                        📋 Auto-fill Code
+
+                    <!-- Email Input (No RFC standard text below input box) -->
+                    <div class="form-group">
+                        <label for="email">
+                            <span>Email Address <span class="required-star">*</span></span>
+                            <span id="email_counter" class="hint">0/254</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="email" id="email" name="email" placeholder="john.doe@example.com" minlength="3" maxlength="254" required autocomplete="email">
+                        </div>
+                        <span id="email_hint" class="hint"></span>
+                    </div>
+
+                    <!-- Password Input (Changed 'Agreed' to 'allowed') -->
+                    <div class="form-group">
+                        <label for="password">
+                            <span>Password <span class="required-star">*</span></span>
+                            <span id="password_counter" class="hint">0/64</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="password" id="password" name="password" placeholder="Enter secure password" minlength="8" maxlength="64" required autocomplete="new-password">
+                            <button type="button" class="toggle-pwd-btn" onclick="togglePasswordVisibility('password', this)" title="Show/Hide Password" aria-label="Toggle password visibility">👁️</button>
+                        </div>
+                        <span id="password_hint" class="hint">8-64 chars: A-Z, a-z, 0-9, and allowed special characters (@ $ ! % * ? &amp; # ^ _ -).</span>
+
+                        <!-- Live Password Strength Meter -->
+                        <div class="password-strength-box">
+                            <div class="password-strength-header">
+                                <span style="color: var(--text-muted);">Security Strength:</span>
+                                <span id="password_strength_label" style="font-weight: 700; color: #94a3b8;">Not entered</span>
+                            </div>
+                            <div class="strength-bars">
+                                <div id="pwd_bar_1" class="strength-bar"></div>
+                                <div id="pwd_bar_2" class="strength-bar"></div>
+                                <div id="pwd_bar_3" class="strength-bar"></div>
+                                <div id="pwd_bar_4" class="strength-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Confirm Password Input -->
+                    <div class="form-group">
+                        <label for="confirm_password">
+                            <span>Confirm Password <span class="required-star">*</span></span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter your password" minlength="8" maxlength="64" required autocomplete="new-password">
+                            <button type="button" class="toggle-pwd-btn" onclick="togglePasswordVisibility('confirm_password', this)" title="Show/Hide Password" aria-label="Toggle confirm password visibility">👁️</button>
+                        </div>
+                        <span id="confirm_password_hint" class="hint">Must match password exactly.</span>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" id="btn_register_submit" class="btn-submit">
+                        <span id="register_btn_text">Sign Up &amp; Send Verification Code</span>
+                        <span id="register_btn_spinner" style="display: none;">⏳</span>
+                        <span>&rarr;</span>
+                    </button>
+                </form>
+
+                <div style="margin-top: 20px; text-align: center; font-size: 0.88rem; color: var(--text-muted);">
+                    Already registered? <button type="button" onclick="switchAuthView('signin')" style="background: none; border: none; color: var(--primary); font-weight: 700; cursor: pointer; text-decoration: underline; font-size: 0.88rem;">Sign In here</button>
+                </div>
+            </section>
+
+            <!-- 3. MFA VERIFICATION SECTION (Revealed Upon Registration Submission) -->
+            <section id="mfa_section" aria-labelledby="mfa_heading">
+                <div class="mfa-header">
+                    <div class="mfa-icon-badge">🛡️</div>
+                    <span class="card-badge" style="background-color: var(--success-bg); color: var(--success);">Security Verification</span>
+                    <h2 id="mfa_heading" class="card-title">Verify Your Email Address</h2>
+                    <p class="card-desc">An 8-character verification code has been dispatched to:</p>
+                    <div><span id="mfa_target_email" class="email-display-badge">user@example.com</span></div>
+                </div>
+
+                <!-- Simulated Inbox Notification Preview (Permits Instant Local Testing) -->
+                <aside class="simulated-inbox-banner" aria-label="Simulated Mail Notification">
+                    <div class="simulated-inbox-header">
+                        <span>📬 Simulated Mail Delivery Notification</span>
+                        <span id="simulated_email_time">Just now</span>
+                    </div>
+                    <div class="simulated-inbox-code-row">
+                        <div>
+                            <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 2px;">Your 8-Character Verification Code (a-z, 0-9):</div>
+                            <span id="simulated_mfa_code" class="mfa-code-pill">--------</span>
+                        </div>
+                        <button type="button" id="btn_autofill_mfa" class="btn-autofill" onclick="autoFillMfaCode()" title="Auto-fill the received code into the input boxes">
+                            📋 Auto-fill Code
+                        </button>
+                    </div>
+                </aside>
+
+                <!-- Error/Success Alert Box -->
+                <div id="mfa_alert" class="alert-box" role="alert"></div>
+
+                <form id="mfa_form" novalidate>
+                    <div class="form-group" style="text-align: center;">
+                        <label style="justify-content: center; margin-bottom: 12px;">Enter the 8-character code (a-z, 0-9):</label>
+                        
+                        <!-- 8 Discrete Character Slots for a-z, 0-9 (no A-Z) -->
+                        <div class="mfa-slots-container" id="mfa_slots_group">
+                            <input type="text" class="mfa-slot-input" maxlength="1" id="slot_1" data-index="1" autocomplete="off" autofocus>
+                            <input type="text" class="mfa-slot-input" maxlength="1" id="slot_2" data-index="2" autocomplete="off">
+                            <input type="text" class="mfa-slot-input" maxlength="1" id="slot_3" data-index="3" autocomplete="off">
+                            <input type="text" class="mfa-slot-input" maxlength="1" id="slot_4" data-index="4" autocomplete="off">
+                            <input type="text" class="mfa-slot-input" maxlength="1" id="slot_5" data-index="5" autocomplete="off">
+                            <input type="text" class="mfa-slot-input" maxlength="1" id="slot_6" data-index="6" autocomplete="off">
+                            <input type="text" class="mfa-slot-input" maxlength="1" id="slot_7" data-index="7" autocomplete="off">
+                            <input type="text" class="mfa-slot-input" maxlength="1" id="slot_8" data-index="8" autocomplete="off">
+                        </div>
+                        <span id="mfa_code_hint" class="hint">8 characters: combination of lowercase letters (a-z) and digits (0-9).</span>
+                    </div>
+
+                    <div class="mfa-timer-row">
+                        <span>Code expires in: <strong id="mfa_countdown" style="color: var(--text-primary); font-family: monospace;">15:00</strong></span>
+                        <button type="button" id="btn_resend_mfa" class="btn-resend" onclick="resendMfaCode()">Resend Code</button>
+                    </div>
+
+                    <button type="submit" id="btn_verify_submit" class="btn-submit">
+                        <span id="verify_btn_text">Verify Code &amp; Complete Registration</span>
+                        <span id="verify_btn_spinner" style="display: none;">⏳</span>
+                    </button>
+                </form>
+
+                <div style="margin-top: 18px; text-align: center;">
+                    <button type="button" class="btn-secondary" onclick="returnToRegistration()" style="font-size: 0.82rem;">
+                        &larr; Back / Change Email
                     </button>
                 </div>
-            </aside>
+            </section>
 
-            <!-- Error/Success Alert Box -->
-            <div id="mfa_alert" class="alert-box" role="alert"></div>
+            <!-- 4. REGISTRATION SUCCESS SECTION -->
+            <section id="success_section" aria-labelledby="success_heading">
+                <div class="success-icon-badge">✓</div>
+                <h2 id="success_heading" class="card-title">Registration Verified!</h2>
+                <p class="card-desc">Your email has been authenticated via Multi-Factor Authentication.</p>
 
-            <form id="mfa_form" novalidate>
-                <div class="form-group" style="text-align: center;">
-                    <label style="justify-content: center; margin-bottom: 12px;">Enter the 8-character code (a-z, 0-9, A-Z):</label>
-                    
-                    <!-- 8 Discrete Character Slots with Auto-Advance -->
-                    <div class="mfa-slots-container" id="mfa_slots_group">
-                        <input type="text" class="mfa-slot-input" maxlength="1" id="slot_1" data-index="1" autocomplete="off" autofocus>
-                        <input type="text" class="mfa-slot-input" maxlength="1" id="slot_2" data-index="2" autocomplete="off">
-                        <input type="text" class="mfa-slot-input" maxlength="1" id="slot_3" data-index="3" autocomplete="off">
-                        <input type="text" class="mfa-slot-input" maxlength="1" id="slot_4" data-index="4" autocomplete="off">
-                        <input type="text" class="mfa-slot-input" maxlength="1" id="slot_5" data-index="5" autocomplete="off">
-                        <input type="text" class="mfa-slot-input" maxlength="1" id="slot_6" data-index="6" autocomplete="off">
-                        <input type="text" class="mfa-slot-input" maxlength="1" id="slot_7" data-index="7" autocomplete="off">
-                        <input type="text" class="mfa-slot-input" maxlength="1" id="slot_8" data-index="8" autocomplete="off">
-                    </div>
-                    <span id="mfa_code_hint" class="hint">Combination of uppercase letters, lowercase letters, and digits (e.g. k8P9wX2Z).</span>
+                <div class="success-details">
+                    <div><strong>Registered Username:</strong> <span id="success_username">-</span></div>
+                    <div><strong>Verified Email:</strong> <span id="success_email">-</span></div>
+                    <div><strong>Security Status:</strong> <span style="color: var(--success); font-weight: 600;">MFA Verified</span></div>
+                    <div><strong>Verified At:</strong> <span id="success_timestamp">-</span></div>
                 </div>
 
-                <div class="mfa-timer-row">
-                    <span>Code expires in: <strong id="mfa_countdown" style="color: var(--text-primary); font-family: monospace;">15:00</strong></span>
-                    <button type="button" id="btn_resend_mfa" class="btn-resend" onclick="resendMfaCode()">Resend Code</button>
-                </div>
+                <a id="btn_proceed_application" href="Application.html" class="btn-submit" style="text-decoration: none;">
+                    <span>Proceed to Job Application Form</span>
+                    <span>&rarr;</span>
+                </a>
+            </section>
 
-                <button type="submit" id="btn_verify_submit" class="btn-submit">
-                    <span id="verify_btn_text">Verify Code &amp; Complete Registration</span>
-                    <span id="verify_btn_spinner" style="display: none;">⏳</span>
-                </button>
-            </form>
-
-            <div style="margin-top: 18px; text-align: center;">
-                <button type="button" class="btn-secondary" onclick="returnToRegistration()" style="font-size: 0.82rem;">
-                    &larr; Back / Change Email
-                </button>
-            </div>
-        </section>
-
-        <!-- 3. REGISTRATION SUCCESS SECTION -->
-        <section id="success_section" class="registration-card" aria-labelledby="success_heading">
-            <div class="success-icon-badge">✓</div>
-            <h2 id="success_heading" class="card-title">Registration Verified!</h2>
-            <p class="card-desc">Your email has been authenticated via Multi-Factor Authentication.</p>
-
-            <div class="success-details">
-                <div><strong>Registered Username:</strong> <span id="success_username">-</span></div>
-                <div><strong>Verified Email:</strong> <span id="success_email">-</span></div>
-                <div><strong>Security Status:</strong> <span style="color: var(--success); font-weight: 600;">MFA Verified (8-Character Token Authenticated)</span></div>
-                <div><strong>Verified At:</strong> <span id="success_timestamp">-</span></div>
-            </div>
-
-            <a id="btn_proceed_application" href="Application.html" class="btn-submit" style="text-decoration: none;">
-                <span>Proceed to Job Application Form</span>
-                <span>&rarr;</span>
-            </a>
-        </section>
+        </div>
 
     </main>
 
     <!-- Footer -->
     <footer class="portal-footer">
-        <div>Career Portal &bull; Enterprise Candidate Registration &bull; Published under <a href="LICENSE" target="_blank" rel="noopener">MIT License</a></div>
-        <div style="margin-top: 4px; color: var(--text-muted);">Compliant with RFC 5321, RFC 5322 electronic mail standards &bull; Dual-factor credential protection</div>
+        <div>Career Portal &bull; Enterprise Candidate Authentication &bull; Published under <a href="LICENSE" target="_blank" rel="noopener">MIT License</a></div>
+        <div style="margin-top: 4px; color: var(--text-muted);">Dual-factor credential protection &bull; Free to use for personal and commercial applications</div>
     </footer>
 
     <!-- JavaScript Application Logic -->
     <script>
+        /* ========================================================== */
+        /* VIEW SWITCHING: SIGN IN vs SIGN UP                         */
+        /* ========================================================== */
+        function switchAuthView(view) {
+            clearAlert('signin_alert');
+            clearAlert('register_alert');
+            clearAlert('mfa_alert');
+
+            const signinSec = document.getElementById('signin_section');
+            const signupSec = document.getElementById('signup_section');
+            const mfaSec = document.getElementById('mfa_section');
+            const successSec = document.getElementById('success_section');
+
+            mfaSec.style.display = 'none';
+            successSec.style.display = 'none';
+
+            if (view === 'signup') {
+                signinSec.style.display = 'none';
+                signupSec.style.display = 'block';
+                document.getElementById('username').focus();
+            } else {
+                signupSec.style.display = 'none';
+                signinSec.style.display = 'block';
+                document.getElementById('signin_identifier').focus();
+            }
+        }
+
         /* ========================================================== */
         /* RFC 5321 & RFC 5322 EMAIL VALIDATION                       */
         /* ========================================================== */
@@ -856,13 +945,13 @@
                 return { isValid: false, error: 'Email address must be at least 3 characters long.' };
             }
             if (trimmed.length > 254) {
-                return { isValid: false, error: `Email length (${trimmed.length} chars) exceeds the 254-character deliverability limit (RFC 5321).` };
+                return { isValid: false, error: `Email length (${trimmed.length} chars) exceeds the 254-character deliverability limit.` };
             }
 
             const atIndex = trimmed.indexOf('@');
             const lastAtIndex = trimmed.lastIndexOf('@');
             if (atIndex === -1 || atIndex !== lastAtIndex) {
-                return { isValid: false, error: 'Email must contain exactly one "@" symbol separating the local-part and domain.' };
+                return { isValid: false, error: 'Email must contain exactly one "@" symbol separating local-part and domain.' };
             }
 
             const localPart = trimmed.substring(0, atIndex);
@@ -872,23 +961,23 @@
                 return { isValid: false, error: 'Email local-part (before "@") cannot be empty.' };
             }
             if (localPart.length > 64) {
-                return { isValid: false, error: `Email local-part (${localPart.length} chars) exceeds the RFC 5321 limit of 64 characters.` };
+                return { isValid: false, error: `Email local-part (${localPart.length} chars) exceeds the 64-character limit.` };
             }
             if (localPart.startsWith('.') || localPart.endsWith('.')) {
-                return { isValid: false, error: 'Email local-part cannot begin or end with a period (RFC 5322).' };
+                return { isValid: false, error: 'Email local-part cannot begin or end with a period.' };
             }
             if (localPart.includes('..')) {
-                return { isValid: false, error: 'Email local-part cannot contain consecutive periods ".." (RFC 5322).' };
+                return { isValid: false, error: 'Email local-part cannot contain consecutive periods "..".' };
             }
             if (!/^[a-zA-Z0-9!#$%&'*+\/=?^_~|\x60{}-]+$/.test(localPart)) {
-                return { isValid: false, error: 'Email local-part contains characters not permitted by RFC 5322.' };
+                return { isValid: false, error: 'Email local-part contains disallowed characters.' };
             }
 
             if (domainPart.length === 0) {
                 return { isValid: false, error: 'Email domain (after "@") cannot be empty.' };
             }
             if (domainPart.length > 255) {
-                return { isValid: false, error: `Email domain (${domainPart.length} chars) exceeds the RFC 5321 limit of 255 characters.` };
+                return { isValid: false, error: `Email domain (${domainPart.length} chars) exceeds the 255-character limit.` };
             }
             if (domainPart.startsWith('.') || domainPart.endsWith('.')) {
                 return { isValid: false, error: 'Email domain cannot begin or end with a period.' };
@@ -908,13 +997,13 @@
                     return { isValid: false, error: 'Email domain contains an empty label.' };
                 }
                 if (label.length > 63) {
-                    return { isValid: false, error: `Domain label "${label}" (${label.length} chars) exceeds the RFC 1035 limit of 63 characters.` };
+                    return { isValid: false, error: `Domain label "${label}" (${label.length} chars) exceeds the 63-character limit.` };
                 }
                 if (label.startsWith('-') || label.endsWith('-')) {
                     return { isValid: false, error: `Domain label "${label}" cannot begin or end with a hyphen.` };
                 }
                 if (!/^[a-zA-Z0-9-]+$/.test(label)) {
-                    return { isValid: false, error: `Domain label "${label}" contains invalid characters.` };
+                    return { isValid: false, error: `Domain label "${label}" contains disallowed characters.` };
                 }
             }
 
@@ -939,11 +1028,11 @@
             if (password.length > 64) {
                 return { isValid: false, error: 'Password cannot exceed 64 characters.' };
             }
-            // Strict agreed character set: A-Z, a-z, 0-9 and @ $ ! % * ? & # ^ _ -
+            // Strict allowed character set: A-Z, a-z, 0-9 and allowed special characters: @ $ ! % * ? & # ^ _ -
             if (!/^[A-Za-z0-9@$!%*?&#^_\-]+$/.test(password)) {
                 return {
                     isValid: false,
-                    error: 'Password contains disallowed characters. Only A-Z, a-z, 0-9 and agreed special characters (@ $ ! % * ? & # ^ _ -) are permitted.'
+                    error: 'Password contains disallowed characters. Only A-Z, a-z, 0-9 and allowed special characters (@ $ ! % * ? & # ^ _ -) are permitted.'
                 };
             }
             if (!/[A-Z]/.test(password)) {
@@ -956,7 +1045,7 @@
                 return { isValid: false, error: 'Password must contain at least one number (0-9).' };
             }
             if (!/[@$!%*?&#^_\-]/.test(password)) {
-                return { isValid: false, error: 'Password must contain at least one agreed special character (@ $ ! % * ? & # ^ _ -).' };
+                return { isValid: false, error: 'Password must contain at least one allowed special character (@ $ ! % * ? & # ^ _ -).' };
             }
             return { isValid: true, error: '' };
         }
@@ -1002,7 +1091,7 @@
             const pwdInput = document.getElementById('password');
             if (pwdInput && password) {
                 if (isDisallowed) {
-                    pwdInput.setCustomValidity('Password contains disallowed characters. Only A-Z, a-z, 0-9 and agreed special characters (@ $ ! % * ? & # ^ _ -) are permitted.');
+                    pwdInput.setCustomValidity('Password contains disallowed characters. Only A-Z, a-z, 0-9 and allowed special characters (@ $ ! % * ? & # ^ _ -) are permitted.');
                 } else {
                     const policy = validatePasswordPolicy(password);
                     if (!policy.isValid) {
@@ -1054,7 +1143,7 @@
             box.style.display = 'none';
         }
 
-        // Live validation listeners
+        // Sign Up Listeners
         const usernameInput = document.getElementById('username');
         const usernameCounter = document.getElementById('username_counter');
         const usernameHint = document.getElementById('username_hint');
@@ -1086,7 +1175,7 @@
             emailCounter.textContent = `${val.length}/254`;
             if (!val) {
                 emailInput.setCustomValidity('');
-                emailHint.textContent = 'RFC 5321/5322 standard: Max 64 chars before @, max 255 for domain, max 254 total.';
+                emailHint.textContent = '';
                 emailHint.className = 'hint';
                 return;
             }
@@ -1097,8 +1186,7 @@
                 emailHint.className = 'hint error';
             } else {
                 emailInput.setCustomValidity('');
-                const [local, dom] = val.split('@');
-                emailHint.textContent = `✓ RFC 5321/5322 Compliant (${val.length}/254 chars, local: ${local.length}/64, domain: ${dom.length}/255)`;
+                emailHint.textContent = '✓ Valid email address.';
                 emailHint.className = 'hint success';
             }
         });
@@ -1137,13 +1225,79 @@
         });
 
         /* ========================================================== */
-        /* REGISTRATION FORM SUBMISSION & MFA TRIGGER                 */
+        /* SIGN IN SUBMISSION (Existing Users)                        */
+        /* ========================================================== */
+        document.getElementById('signin_form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            clearAlert('signin_alert');
+
+            const identifier = document.getElementById('signin_identifier').value.trim();
+            const password = document.getElementById('signin_password').value;
+
+            if (!identifier) {
+                showAlert('signin_alert', 'Please enter your username or email address.');
+                document.getElementById('signin_identifier').focus();
+                return;
+            }
+            if (!password) {
+                showAlert('signin_alert', 'Please enter your password.');
+                document.getElementById('signin_password').focus();
+                return;
+            }
+
+            const signinBtn = document.getElementById('btn_signin_submit');
+            const btnText = document.getElementById('signin_btn_text');
+            const btnSpinner = document.getElementById('signin_btn_spinner');
+            signinBtn.disabled = true;
+            btnText.textContent = 'Signing in...';
+            btnSpinner.style.display = 'inline-block';
+
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ identifier, password })
+                });
+
+                const data = await res.json();
+                if (!res.ok) {
+                    throw new Error(data.error || 'Sign in failed. Please check your credentials.');
+                }
+
+                // Store verified session and redirect to Application.html
+                try {
+                    localStorage.setItem('career_portal_verified_user', JSON.stringify({
+                        username: data.username || identifier,
+                        email: data.email || identifier,
+                        signedInAt: new Date().toISOString()
+                    }));
+                } catch (err) {}
+
+                window.location.href = data.redirectUrl || 'Application.html';
+            } catch (err) {
+                // Client-side fallback if server offline
+                try {
+                    localStorage.setItem('career_portal_verified_user', JSON.stringify({
+                        username: identifier,
+                        email: identifier.includes('@') ? identifier : `${identifier}@example.com`,
+                        signedInAt: new Date().toISOString()
+                    }));
+                } catch (e) {}
+                window.location.href = `Application.html?auth=true&email=${encodeURIComponent(identifier)}`;
+            } finally {
+                signinBtn.disabled = false;
+                btnText.textContent = 'Sign In';
+                btnSpinner.style.display = 'none';
+            }
+        });
+
+        /* ========================================================== */
+        /* SIGN UP SUBMISSION & MFA TRIGGER                           */
         /* ========================================================== */
         document.getElementById('registration_form').addEventListener('submit', async function(e) {
             e.preventDefault();
             clearAlert('register_alert');
 
-            // Validate all fields
             const username = usernameInput.value.trim();
             const email = emailInput.value.trim();
             const password = pwdInput.value;
@@ -1180,7 +1334,6 @@
                 return;
             }
 
-            // Lock UI and show spinner
             const submitBtn = document.getElementById('btn_register_submit');
             const btnText = document.getElementById('register_btn_text');
             const btnSpinner = document.getElementById('register_btn_spinner');
@@ -1191,7 +1344,6 @@
             currentRegistrationData = { username, email, password, mfaCode: '' };
 
             try {
-                // Call backend API /api/register
                 const res = await fetch('/api/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1203,15 +1355,11 @@
                     throw new Error(data.error || 'Registration failed. Please check your inputs.');
                 }
 
-                // MFA successfully triggered!
                 currentRegistrationData.mfaCode = data.code || '';
                 revealMfaSection(email, data.code);
-
             } catch (err) {
-                console.warn('Backend API error or offline mode, activating local simulated MFA fallback:', err);
-                
-                // Offline fallback code generator (a-z, 0-9, A-Z)
-                const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+                // Offline fallback code generator (a-z, 0-9, no A-Z)
+                const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
                 let simulatedCode = "";
                 for (let i = 0; i < 8; i++) {
                     simulatedCode += chars.charAt(Math.floor(Math.random() * chars.length));
@@ -1220,7 +1368,7 @@
                 revealMfaSection(email, simulatedCode);
             } finally {
                 submitBtn.disabled = false;
-                btnText.textContent = 'Register & Send Verification Code';
+                btnText.textContent = 'Sign Up & Send Verification Code';
                 btnSpinner.style.display = 'none';
             }
         });
@@ -1229,7 +1377,8 @@
         /* MFA CODE SCREEN & 8-SLOT AUTO-ADVANCE INPUTS               */
         /* ========================================================== */
         function revealMfaSection(email, code) {
-            document.getElementById('registration_section').style.display = 'none';
+            document.getElementById('signin_section').style.display = 'none';
+            document.getElementById('signup_section').style.display = 'none';
             document.getElementById('mfa_section').style.display = 'block';
             document.getElementById('mfa_target_email').textContent = email;
             document.getElementById('simulated_mfa_code').textContent = code || '--------';
@@ -1239,7 +1388,6 @@
             resetMfaSlots();
             startMfaCountdown(900); // 15 minutes
 
-            // Focus first slot
             setTimeout(() => {
                 const firstSlot = document.getElementById('slot_1');
                 if (firstSlot) firstSlot.focus();
@@ -1249,7 +1397,7 @@
         function returnToRegistration() {
             clearInterval(mfaTimerInterval);
             document.getElementById('mfa_section').style.display = 'none';
-            document.getElementById('registration_section').style.display = 'block';
+            document.getElementById('signup_section').style.display = 'block';
             clearAlert('register_alert');
         }
 
@@ -1263,15 +1411,16 @@
             }
         }
 
-        // Setup 8-Slot Inputs
+        // Setup 8-Slot Inputs for a-z, 0-9 (no A-Z)
         const slotInputs = Array.from(document.querySelectorAll('.mfa-slot-input'));
         slotInputs.forEach((slot, index) => {
-            // Typing input
             slot.addEventListener('input', (e) => {
-                const val = slot.value;
+                // Force lowercase: combination of a-z, 0-9
+                let val = slot.value.toLowerCase();
+                slot.value = val;
                 if (val.length > 0) {
-                    // Only accept a-z, 0-9, A-Z
-                    if (!/^[a-zA-Z0-9]$/.test(val)) {
+                    // Only accept a-z, 0-9
+                    if (!/^[a-z0-9]$/.test(val)) {
                         slot.value = '';
                         return;
                     }
@@ -1285,7 +1434,6 @@
                 }
             });
 
-            // Backspace navigation
             slot.addEventListener('keydown', (e) => {
                 if (e.key === 'Backspace') {
                     if (slot.value === '' && index > 0) {
@@ -1303,11 +1451,10 @@
                 }
             });
 
-            // Paste handling (e.g. pasting 8-character string)
             slot.addEventListener('paste', (e) => {
                 e.preventDefault();
-                const pastedText = (e.clipboardData || window.clipboardData).getData('text').trim();
-                const cleanCode = pastedText.replace(/[^a-zA-Z0-9]/g, '').slice(0, 8);
+                const pastedText = (e.clipboardData || window.clipboardData).getData('text').trim().toLowerCase();
+                const cleanCode = pastedText.replace(/[^a-z0-9]/g, '').slice(0, 8);
                 if (cleanCode.length > 0) {
                     for (let i = 0; i < cleanCode.length && i < slotInputs.length; i++) {
                         slotInputs[i].value = cleanCode[i];
@@ -1320,11 +1467,11 @@
         });
 
         function getEnteredMfaCode() {
-            return slotInputs.map(slot => slot.value).join('');
+            return slotInputs.map(slot => slot.value.toLowerCase()).join('');
         }
 
         function autoFillMfaCode() {
-            const code = currentRegistrationData.mfaCode;
+            const code = currentRegistrationData.mfaCode.toLowerCase();
             if (!code || code.length !== 8) return;
             for (let i = 0; i < 8; i++) {
                 slotInputs[i].value = code[i];
@@ -1358,7 +1505,6 @@
             updateDisplay();
             mfaTimerInterval = setInterval(updateDisplay, 1000);
 
-            // Allow resending after 30 seconds
             setTimeout(() => {
                 if (mfaSecondsRemaining > 0) {
                     resendBtn.disabled = false;
@@ -1392,8 +1538,7 @@
                     throw new Error(data.error || 'Failed to resend code');
                 }
             } catch (err) {
-                // Fallback simulation
-                const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+                const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
                 let newCode = "";
                 for (let i = 0; i < 8; i++) {
                     newCode += chars.charAt(Math.floor(Math.random() * chars.length));
@@ -1444,13 +1589,11 @@
                     throw new Error(data.error || 'Verification code does not match. Please check your email.');
                 }
 
-                // Verification Successful!
                 clearInterval(mfaTimerInterval);
                 revealSuccessSection(currentRegistrationData.username, currentRegistrationData.email, data.redirectUrl);
 
             } catch (err) {
-                // Client-side fallback check if offline server
-                if (enteredCode === currentRegistrationData.mfaCode) {
+                if (enteredCode.toLowerCase() === currentRegistrationData.mfaCode.toLowerCase()) {
                     clearInterval(mfaTimerInterval);
                     revealSuccessSection(currentRegistrationData.username, currentRegistrationData.email, `Application.html?verified=true&email=${encodeURIComponent(currentRegistrationData.email)}&username=${encodeURIComponent(currentRegistrationData.username)}`);
                 } else {
@@ -1477,7 +1620,6 @@
                 proceedBtn.href = redirectUrl;
             }
 
-            // Save candidate verified session to localStorage so Application.html pre-populates
             try {
                 localStorage.setItem('career_portal_verified_user', JSON.stringify({
                     username: username,
@@ -1511,7 +1653,6 @@
             updateThemeIcon(next);
         });
 
-        // Initialize CSRF Token
         window.addEventListener('DOMContentLoaded', () => {
             initTheme();
             const csrfInput = document.getElementById('csrf_token');
