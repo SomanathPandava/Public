@@ -49,9 +49,68 @@ try {
                 $appData = $body | ConvertFrom-Json
 
                 $appId = [regex]::Replace([string]$appData.appId, '[^a-zA-Z0-9_-]', '')
-                if ([string]::IsNullOrWhiteSpace($appId)) {
+                if ([string]::IsNullOrWhiteSpace($appId) -or $appId.Length -lt 8 -or $appId.Length -gt 35) {
                     $response.StatusCode = 400
-                    $bytes = [System.Text.Encoding]::UTF8.GetBytes('{"error": "Missing or invalid appId"}')
+                    $bytes = [System.Text.Encoding]::UTF8.GetBytes('{"error": "Missing or invalid appId (must be 8-35 characters)"}')
+                    $response.OutputStream.Write($bytes, 0, $bytes.Length)
+                    $response.Close()
+                    continue
+                }
+
+                # Strict Server-Side Validation: Text Injection & RFC 5321/5322 Email Standards
+                $validationError = $null
+
+                # 1. RFC 5321 / RFC 5322 Email Validation
+                if ($appData.email) {
+                    $emailStr = [string]$appData.email.Trim()
+                    if ($emailStr.Length -lt 3 -or $emailStr.Length -gt 254) {
+                        $validationError = "Email length ($($emailStr.Length)) violates RFC 5321 (allowed 3-254 characters)."
+                    } elseif ($emailStr -notmatch '^([^@\s]+)@([^@\s]+)$') {
+                        $validationError = "Email syntax violates RFC 5322 (must contain single @ separating local-part and domain)."
+                    } else {
+                        $localPart = $Matches[1]
+                        $domainPart = $Matches[2]
+                        if ($localPart.Length -lt 1 -or $localPart.Length -gt 64) {
+                            $validationError = "Email local-part length ($($localPart.Length)) violates RFC 5321 (max 64 characters)."
+                        } elseif ($domainPart.Length -lt 1 -or $domainPart.Length -gt 255) {
+                            $validationError = "Email domain length ($($domainPart.Length)) violates RFC 5321 (max 255 characters)."
+                        } elseif ($localPart.StartsWith('.') -or $localPart.EndsWith('.') -or $localPart.Contains('..')) {
+                            $validationError = "Email local-part violates RFC 5322 period rules."
+                        } else {
+                            $domainLabels = $domainPart.Split('.')
+                            if ($domainLabels.Count -lt 2) {
+                                $validationError = "Email domain must include a valid Top-Level Domain."
+                            } else {
+                                foreach ($lbl in $domainLabels) {
+                                    if ($lbl.Length -lt 1 -or $lbl.Length -gt 63) {
+                                        $validationError = "Domain label '$lbl' violates RFC 1035 length limit (max 63 characters)."
+                                        break
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                # 2. Text Injection Protection & Field Length Caps
+                if (-not $validationError) {
+                    if ($appData.username -and ([string]$appData.username).Length -gt 30) {
+                        $validationError = "Username exceeds maximum length of 30 characters."
+                    } elseif ($appData.fullName -and ([string]$appData.fullName).Length -gt 100) {
+                        $validationError = "Full name exceeds maximum length of 100 characters."
+                    } elseif ($appData.bio -and ([string]$appData.bio).Length -gt 1000) {
+                        $validationError = "Bio text exceeds maximum length of 1000 characters."
+                    } elseif ($appData.phone -and ([string]$appData.phone).Length -gt 25) {
+                        $validationError = "Phone number exceeds maximum length of 25 characters."
+                    } elseif ($appData.website -and ([string]$appData.website).Length -gt 254) {
+                        $validationError = "Website URL exceeds maximum length of 254 characters."
+                    }
+                }
+
+                if ($validationError) {
+                    Write-Host "[SECURITY REJECTION] $validationError" -ForegroundColor Red
+                    $response.StatusCode = 400
+                    $bytes = [System.Text.Encoding]::UTF8.GetBytes(('{"error": "Validation failed: ' + $validationError + '"}'))
                     $response.OutputStream.Write($bytes, 0, $bytes.Length)
                     $response.Close()
                     continue
