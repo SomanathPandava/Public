@@ -17,4 +17,4 @@ An enterprise-grade, accessible multi-step job application portal and talent acq
 ---
 
 ## License
-Published for free public use.
+This project is open-source and available under the [MIT License](./LICENSE). Free to use for personal and commercial applications.

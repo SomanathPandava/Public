@@ -71,4 +71,4 @@ Career Portal/
 ---
 
 ## License
-Published for free public use.
+This project is open-source and available under the [MIT License](../LICENSE). Free to use for personal and commercial applications.
