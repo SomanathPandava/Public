@@ -1,7 +1,19 @@
-{
-    "lastUpdated":  "2026-11-01T15:42:37.219Z",
-    "totalApplications":  1,
+﻿{
+    "lastUpdated":  "2026-11-01T20:05:05.549Z",
+    "totalApplications":  2,
     "applications":  [
+                         {
+                             "appId":  "20261102013459",
+                             "email":  "somanath959@gmail.com",
+                             "fullName":  "",
+                             "primaryRole":  "",
+                             "stage":  "draft",
+                             "status":  "draft",
+                             "clientIp":  "127.0.0.1",
+                             "submittedAt":  null,
+                             "lastUpdated":  "2026-11-01T20:05:05.549Z",
+                             "fileName":  "20261102013459.json"
+                         },
                          {
                              "appId":  "202611011815_1",
                              "email":  "john.doe@example.com",

@@ -25,6 +25,12 @@ try {
     $global:mfaStore = @{}
     $mfaLogPath = Join-Path $jobAppsDir "mfa_emails.json"
 
+    function SafeCloseResponse($resp) {
+        if ($resp) {
+            try { $resp.Close() } catch {}
+        }
+    }
+
     while ($listener.IsListening) {
         $context = $listener.GetContext()
         $request = $context.Request
@@ -40,7 +46,7 @@ try {
 
         if ($httpMethod -eq "OPTIONS") {
             $response.StatusCode = 200
-            $response.Close()
+            SafeCloseResponse($response)
             continue
         }
 
@@ -107,7 +113,7 @@ try {
                     $response.StatusCode = 400
                     $bytes = [System.Text.Encoding]::UTF8.GetBytes(('{"error": "' + $validationError + '"}'))
                     $response.OutputStream.Write($bytes, 0, $bytes.Length)
-                    $response.Close()
+                    SafeCloseResponse($response)
                     continue
                 }
 
@@ -171,7 +177,7 @@ try {
                 $bytes = [System.Text.Encoding]::UTF8.GetBytes(('{"error": "' + $_.Exception.Message + '"}'))
                 $response.OutputStream.Write($bytes, 0, $bytes.Length)
             }
-            $response.Close()
+            SafeCloseResponse($response)
             continue
         }
 
@@ -189,7 +195,7 @@ try {
                     $response.StatusCode = 400
                     $bytes = [System.Text.Encoding]::UTF8.GetBytes('{"error": "Email and 8-character verification code are required."}')
                     $response.OutputStream.Write($bytes, 0, $bytes.Length)
-                    $response.Close()
+                    SafeCloseResponse($response)
                     continue
                 }
 
@@ -197,7 +203,7 @@ try {
                     $response.StatusCode = 400
                     $bytes = [System.Text.Encoding]::UTF8.GetBytes('{"error": "No active verification challenge found for this email. Please request a new code."}')
                     $response.OutputStream.Write($bytes, 0, $bytes.Length)
-                    $response.Close()
+                    SafeCloseResponse($response)
                     continue
                 }
 
@@ -208,7 +214,7 @@ try {
                     $response.StatusCode = 400
                     $bytes = [System.Text.Encoding]::UTF8.GetBytes('{"error": "Verification code has expired. Please request a new code."}')
                     $response.OutputStream.Write($bytes, 0, $bytes.Length)
-                    $response.Close()
+                    SafeCloseResponse($response)
                     continue
                 }
 
@@ -217,7 +223,7 @@ try {
                     $response.StatusCode = 400
                     $bytes = [System.Text.Encoding]::UTF8.GetBytes('{"error": "Invalid verification code. Please check your email and enter the exact 8-character code."}')
                     $response.OutputStream.Write($bytes, 0, $bytes.Length)
-                    $response.Close()
+                    SafeCloseResponse($response)
                     continue
                 }
 
@@ -240,7 +246,7 @@ try {
                 $bytes = [System.Text.Encoding]::UTF8.GetBytes(('{"error": "' + $_.Exception.Message + '"}'))
                 $response.OutputStream.Write($bytes, 0, $bytes.Length)
             }
-            $response.Close()
+            SafeCloseResponse($response)
             continue
         }
 
@@ -258,7 +264,7 @@ try {
                     $response.StatusCode = 400
                     $bytes = [System.Text.Encoding]::UTF8.GetBytes('{"error": "Please enter both your username/email and password."}')
                     $response.OutputStream.Write($bytes, 0, $bytes.Length)
-                    $response.Close()
+                    SafeCloseResponse($response)
                     continue
                 }
 
@@ -337,7 +343,7 @@ try {
                 $bytes = [System.Text.Encoding]::UTF8.GetBytes(('{"error": "' + $_.Exception.Message + '"}'))
                 $response.OutputStream.Write($bytes, 0, $bytes.Length)
             }
-            $response.Close()
+            SafeCloseResponse($response)
             continue
         }
 
@@ -446,7 +452,7 @@ try {
                     $response.StatusCode = 400
                     $bytes = [System.Text.Encoding]::UTF8.GetBytes(('{"error": "Validation failed: ' + $validationError + '"}'))
                     $response.OutputStream.Write($bytes, 0, $bytes.Length)
-                    $response.Close()
+                    SafeCloseResponse($response)
                     continue
                 }
 
@@ -565,7 +571,7 @@ try {
                 $resBytes = [System.Text.Encoding]::UTF8.GetBytes('{"error": "' + $_.Exception.Message + '"}')
                 $response.OutputStream.Write($resBytes, 0, $resBytes.Length)
             }
-            $response.Close()
+            SafeCloseResponse($response)
             continue
         }
 
@@ -585,7 +591,7 @@ try {
             $response.ContentType = "application/json; charset=utf-8"
             $bytes = [System.Text.Encoding]::UTF8.GetBytes(($ipObj | ConvertTo-Json))
             $response.OutputStream.Write($bytes, 0, $bytes.Length)
-            $response.Close()
+            SafeCloseResponse($response)
             continue
         }
 
@@ -598,7 +604,7 @@ try {
             } else {
                 $response.StatusCode = 404
             }
-            $response.Close()
+            SafeCloseResponse($response)
             continue
         }
 
@@ -629,7 +635,7 @@ try {
             $response.OutputStream.Write($bytes, 0, $bytes.Length)
         }
 
-        $response.Close()
+        SafeCloseResponse($response)
     }
 } finally {
     $listener.Stop()
