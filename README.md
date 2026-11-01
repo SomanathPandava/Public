@@ -1,20 +1,20 @@
-﻿# Public Applications Repository
+# Public Applications Repository
 
-A collection of free, open-source web applications and utilities published for free public use.
+A collection of free, open-source web applications and utilities published for public use.
 
 ---
 
-## ðŸ“± Available Applications
+## Available Applications
 
 ### 1. [Career Portal](./Career%20Portal)
 An enterprise-grade, accessible multi-step job application portal and talent acquisition console.
 
-- **Folder**: [Career Portal/](./Career%20Portal)
-- **Application**: [Career Portal/index.html](./Career%20Portal/index.html)
-- **PowerShell Backend Server**: [Career Portal/server.ps1](./Career%20Portal/server.ps1)
-- **Documentation**: [Career Portal Readme](./Career%20Portal/README.md)
+- **Folder**: [`Career Portal/`](./Career%20Portal)
+- **Application**: [`Career Portal/index.html`](./Career%20Portal/index.html)
+- **PowerShell Backend Server**: [`Career Portal/server.ps1`](./Career%20Portal/server.ps1)
+- **Documentation**: [Career Portal README](./Career%20Portal/README.md)
 
 ---
 
-## ðŸ“„ License
+## License
 Published for free public use.
