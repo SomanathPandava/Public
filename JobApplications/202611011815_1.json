@@ -1,0 +1,92 @@
+{
+  "appId": "202611011815_1",
+  "tier": "Standard Applicant (Locked)",
+  "username": "john_doe",
+  "email": "john.doe@example.com",
+  "fullName": "Johnathan Doe",
+  "gender": "male",
+  "birthdate": "1995-06-15",
+  "age": "31",
+  "resumeName": "John_Doe_Resume.pdf",
+  "profilePhotoName": "John_Portrait.jpg",
+  "bio": "Experienced Full Stack Developer specializing in HTML5 standards, modular web components, and frontend architectures.",
+  "phone": "+1 555-019-2834",
+  "website": "https://johnathan-doe.dev",
+  "officeSearch": "New York",
+  "country": "us",
+  "languages": [
+    "en",
+    "es"
+  ],
+  "primaryRole": "Full Stack Engineer",
+  "profileTheme": "#2563eb",
+  "satisfactionRating": "9",
+  "workPreference": [
+    "remote",
+    "hybrid"
+  ],
+  "subscribe": true,
+  "interviewTime": "10:30",
+  "discussionSlot": "2026-11-10T10:30",
+  "startMonth": "2026-12",
+  "onboardingWeek": "2026-W49",
+  "termsAgreed": true,
+  "status": "submitted",
+  "stage": "applied",
+  "recruiterTechRating": "4",
+  "recruiterCultureRating": "5",
+  "recruiterNotes": "Candidate demonstrates strong full stack experience and web standards expertise. Recommended for engineering interview.",
+  "submittedAt": "2026-11-01T18:15:00.000Z",
+  "lastUpdated": "2026-11-01T18:15:00.000Z",
+  "applicantMetadata": {
+    "captureTimestampUtc": "2026-11-01T18:15:00.000Z",
+    "captureTimestampLocal": "01/11/2026, 6:15:00 pm",
+    "triggerAction": "submit",
+    "clientIp": "127.0.0.1",
+    "location": {
+      "timeZone": "America/New_York",
+      "timeZoneOffsetMinutes": 300,
+      "timeZoneFormatted": "UTC-05:00",
+      "approximateRegion": "America (New York)",
+      "locale": "en-US",
+      "systemLanguages": [
+        "en-US",
+        "en"
+      ]
+    },
+    "network": {
+      "clientIp": "127.0.0.1",
+      "onlineStatus": "online",
+      "effectiveType": "4g",
+      "downlinkMbps": 25,
+      "rttMs": 30,
+      "saveDataMode": false
+    },
+    "deviceAndHardware": {
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+      "platform": "Win32",
+      "screenResolution": "1920x1080",
+      "availableScreenSize": "1920x1040",
+      "windowViewportSize": "1440x880",
+      "logicalCpuCores": 8,
+      "deviceMemoryGb": 16,
+      "maxTouchPoints": 0,
+      "isTouchDevice": false,
+      "pdfViewerEnabled": true
+    },
+    "sessionTelemetry": {
+      "sessionId": "seed_sess_20261101_1815",
+      "sessionDurationSeconds": 185,
+      "sessionDurationFormatted": "3m 05s",
+      "formCompletionPercent": 100,
+      "activeStepTitle": "Confirmation & Form Actions"
+    },
+    "serverInspection": {
+      "clientIp": "127.0.0.1",
+      "clientPort": 54321,
+      "httpProtocol": "1.1",
+      "serverHostname": "LOCALHOST",
+      "serverReceivedAtUtc": "2026-11-01T18:15:00.050Z"
+    }
+  }
+}

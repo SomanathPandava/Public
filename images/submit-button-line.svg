@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 44" width="160" height="44" fill="none">
+  <!-- Button border outline -->
+  <rect x="1.5" y="1.5" width="157" height="41" rx="8" stroke="#10b981" stroke-width="2.5" fill="#f0fdf4"/>
+  <!-- Paper airplane line drawing icon -->
+  <path d="M22 22l-6 10 18-10-18-10 6 10zm0 0h10" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Button text -->
+  <text x="56" y="27" fill="#047857" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="700">Submit (Image)</text>
+</svg>
+

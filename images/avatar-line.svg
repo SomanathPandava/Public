@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80" fill="none" stroke="#475569" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Outer circle border -->
+  <circle cx="40" cy="40" r="36" stroke="#cbd5e1" stroke-dasharray="4 3"/>
+  <!-- Head -->
+  <circle cx="40" cy="30" r="14"/>
+  <!-- Shoulders -->
+  <path d="M20 62c0-11 9-18 20-18s20 7 20 18"/>
+  <!-- Camera badge in corner -->
+  <circle cx="62" cy="62" r="12" fill="#ffffff" stroke="#2563eb"/>
+  <path d="M57 65h10a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1h-2l-1-2h-4l-1 2h-2a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1z" stroke="#2563eb" stroke-width="1.8"/>
+  <circle cx="62" cy="61" r="2" stroke="#2563eb" stroke-width="1.5"/>
+</svg>
+

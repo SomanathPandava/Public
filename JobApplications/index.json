@@ -1,0 +1,36 @@
+{
+    "lastUpdated":  "2026-11-01T15:42:37.219Z",
+    "totalApplications":  1,
+    "applications":  [
+                         {
+                             "appId":  "202611011815_1",
+                             "email":  "john.doe@example.com",
+                             "fullName":  "Johnathan Doe",
+                             "primaryRole":  "Full Stack Engineer",
+                             "stage":  "applied",
+                             "status":  "submitted",
+                             "clientIp":  "127.0.0.1",
+                             "submittedAt":  "2026-11-01T18:15:00.000Z",
+                             "lastUpdated":  "2026-11-01T15:42:37.219Z",
+                             "fileName":  "202611011815_1.json"
+                         }
+                     ],
+    "byEmail":  {
+                    "john.doe@example.com":  [
+                                                 {
+                                                     "appId":  "202611011815_1",
+                                                     "status":  "submitted",
+                                                     "clientIp":  "127.0.0.1",
+                                                     "fileName":  "202611011815_1.json"
+                                                 }
+                                             ]
+                },
+    "byAppId":  {
+                    "202611011815_1":  {
+                                           "email":  "john.doe@example.com",
+                                           "status":  "submitted",
+                                           "clientIp":  "127.0.0.1",
+                                           "fileName":  "202611011815_1.json"
+                                       }
+                }
+}
