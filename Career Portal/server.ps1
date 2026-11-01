@@ -22,6 +22,9 @@ try {
         New-Item -ItemType Directory -Path $jobAppsDir -Force | Out-Null
     }
 
+    $global:mfaStore = @{}
+    $mfaLogPath = Join-Path $jobAppsDir "mfa_emails.json"
+
     while ($listener.IsListening) {
         $context = $listener.GetContext()
         $request = $context.Request
@@ -37,6 +40,206 @@ try {
 
         if ($httpMethod -eq "OPTIONS") {
             $response.StatusCode = 200
+            $response.Close()
+            continue
+        }
+
+        # API: Registration & 8-Digit Alphanumeric MFA Trigger (a-z, 0-9, A-Z)
+        if ($httpMethod -eq "POST" -and ($urlPath -eq "/api/register" -or $urlPath -eq "/api/send-mfa")) {
+            try {
+                $reader = New-Object System.IO.StreamReader($request.InputStream, [System.Text.Encoding]::UTF8)
+                $body = $reader.ReadToEnd()
+                $data = $body | ConvertFrom-Json
+
+                $validationError = $null
+
+                # 1. Validate Username
+                $username = ([string]$data.username).Trim()
+                if ([string]::IsNullOrWhiteSpace($username) -or $username.Length -lt 4 -or $username.Length -gt 30 -or $username -notmatch '^[a-zA-Z0-9_.-]+$') {
+                    $validationError = "Username must be 4-30 alphanumeric characters, hyphens, periods, or underscores."
+                }
+
+                # 2. Validate Email (RFC 5321 / RFC 5322 Standard)
+                $email = ([string]$data.email).Trim()
+                if (-not $validationError) {
+                    if ($email.Length -lt 3 -or $email.Length -gt 254) {
+                        $validationError = "Email length violates RFC 5321 (allowed 3-254 characters)."
+                    } elseif ($email -notmatch '^([^@\s]+)@([^@\s]+)$') {
+                        $validationError = "Email format violates RFC 5322 (must contain single @ separating local-part and domain)."
+                    } else {
+                        $localPart = $Matches[1]
+                        $domainPart = $Matches[2]
+                        if ($localPart.Length -lt 1 -or $localPart.Length -gt 64) {
+                            $validationError = "Email local-part violates RFC 5321 (max 64 characters)."
+                        } elseif ($domainPart.Length -lt 1 -or $domainPart.Length -gt 255) {
+                            $validationError = "Email domain violates RFC 5321 (max 255 characters)."
+                        } elseif ($localPart.StartsWith('.') -or $localPart.EndsWith('.') -or $localPart.Contains('..')) {
+                            $validationError = "Email local-part violates RFC 5322 period rules."
+                        } else {
+                            $domainLabels = $domainPart.Split('.')
+                            if ($domainLabels.Count -lt 2) {
+                                $validationError = "Email domain must include a valid Top-Level Domain."
+                            } else {
+                                foreach ($lbl in $domainLabels) {
+                                    if ($lbl.Length -lt 1 -or $lbl.Length -gt 63) {
+                                        $validationError = "Domain label '$lbl' violates RFC 1035 length limit (max 63 characters)."
+                                        break
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                # 3. Validate Password Policy (A-Za-z0-9 and agreed special characters: @ $ ! % * ? & # ^ _ -)
+                $password = [string]$data.password
+                if (-not $validationError) {
+                    if ($password.Length -lt 8 -or $password.Length -gt 64) {
+                        $validationError = "Password must be 8-64 characters."
+                    } elseif ($password -notmatch '^[A-Za-z0-9@$!%*?&#^_\-]+$') {
+                        $validationError = "Password contains disallowed characters. Only A-Z, a-z, 0-9 and agreed special characters (@ $ ! % * ? & # ^ _ -) are permitted."
+                    } elseif ($password -notmatch '[A-Z]' -or $password -notmatch '[a-z]' -or $password -notmatch '[0-9]' -or $password -notmatch '[@$!%*?&#^_\-]') {
+                        $validationError = "Password must include at least one uppercase letter, one lowercase letter, one number, and one agreed special character (@ $ ! % * ? & # ^ _ -)."
+                    }
+                }
+
+                if ($validationError) {
+                    $response.StatusCode = 400
+                    $bytes = [System.Text.Encoding]::UTF8.GetBytes(('{"error": "' + $validationError + '"}'))
+                    $response.OutputStream.Write($bytes, 0, $bytes.Length)
+                    $response.Close()
+                    continue
+                }
+
+                # Generate 8-character verification code: combination of a-z, 0-9, A-Z
+                $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".ToCharArray()
+                $rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+                $randomBytes = New-Object byte[] 8
+                $rng.GetBytes($randomBytes)
+                $code = -join ($randomBytes | ForEach-Object { $chars[$_ % $chars.Length] })
+
+                # Save MFA challenge in server memory (valid for 15 minutes)
+                $challenge = [PSCustomObject]@{
+                    username = $username
+                    email = $email
+                    code = $code
+                    createdAt = (Get-Date).ToString("o")
+                    expiresAt = (Get-Date).AddMinutes(15).ToString("o")
+                    verified = $false
+                }
+                $global:mfaStore[$email.ToLower()] = $challenge
+
+                # Console audit log
+                Write-Host "==========================================================" -ForegroundColor Cyan
+                Write-Host "[MFA EMAIL DISPATCHED] To: $email" -ForegroundColor Green
+                Write-Host "Subject: Your 8-Character Career Portal Verification Code" -ForegroundColor White
+                Write-Host "Verification Code: $code (Combination of a-z, 0-9, A-Z)" -ForegroundColor Yellow
+                Write-Host "Expires In: 15 minutes" -ForegroundColor Gray
+                Write-Host "==========================================================" -ForegroundColor Cyan
+
+                # Append to mfa_emails.json log for inspection
+                $emailEntry = [PSCustomObject]@{
+                    id = [System.Guid]::NewGuid().ToString()
+                    to = $email
+                    username = $username
+                    code = $code
+                    timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+                    status = "Dispatched"
+                }
+                $existingEmails = @()
+                if (Test-Path $mfaLogPath) {
+                    try { $existingEmails = Get-Content $mfaLogPath -Raw | ConvertFrom-Json } catch { $existingEmails = @() }
+                }
+                $updatedEmails = @($emailEntry) + @($existingEmails | Select-Object -First 49)
+                $updatedEmails | ConvertTo-Json -Depth 4 | Set-Content $mfaLogPath -Encoding UTF8
+
+                # Return response to client (including code for simulated inbox UI)
+                $response.ContentType = "application/json; charset=utf-8"
+                $respObj = [PSCustomObject]@{
+                    success = $true
+                    message = "Verification code sent to $email."
+                    email = $email
+                    username = $username
+                    code = $code
+                    expiresInSeconds = 900
+                }
+                $bytes = [System.Text.Encoding]::UTF8.GetBytes(($respObj | ConvertTo-Json))
+                $response.OutputStream.Write($bytes, 0, $bytes.Length)
+            } catch {
+                Write-Host "[ERROR] /api/register failed: $_" -ForegroundColor Red
+                $response.StatusCode = 500
+                $bytes = [System.Text.Encoding]::UTF8.GetBytes(('{"error": "' + $_.Exception.Message + '"}'))
+                $response.OutputStream.Write($bytes, 0, $bytes.Length)
+            }
+            $response.Close()
+            continue
+        }
+
+        # API: Verify 8-Digit MFA Code
+        if ($httpMethod -eq "POST" -and $urlPath -eq "/api/verify-mfa") {
+            try {
+                $reader = New-Object System.IO.StreamReader($request.InputStream, [System.Text.Encoding]::UTF8)
+                $body = $reader.ReadToEnd()
+                $data = $body | ConvertFrom-Json
+
+                $email = ([string]$data.email).Trim().ToLower()
+                $enteredCode = ([string]$data.code).Trim()
+
+                if ([string]::IsNullOrWhiteSpace($email) -or [string]::IsNullOrWhiteSpace($enteredCode)) {
+                    $response.StatusCode = 400
+                    $bytes = [System.Text.Encoding]::UTF8.GetBytes('{"error": "Email and 8-character verification code are required."}')
+                    $response.OutputStream.Write($bytes, 0, $bytes.Length)
+                    $response.Close()
+                    continue
+                }
+
+                if (-not $global:mfaStore.ContainsKey($email)) {
+                    $response.StatusCode = 400
+                    $bytes = [System.Text.Encoding]::UTF8.GetBytes('{"error": "No active verification challenge found for this email. Please request a new code."}')
+                    $response.OutputStream.Write($bytes, 0, $bytes.Length)
+                    $response.Close()
+                    continue
+                }
+
+                $challenge = $global:mfaStore[$email]
+                $expiresAt = [DateTime]::Parse($challenge.expiresAt)
+                if ((Get-Date) -gt $expiresAt) {
+                    $global:mfaStore.Remove($email)
+                    $response.StatusCode = 400
+                    $bytes = [System.Text.Encoding]::UTF8.GetBytes('{"error": "Verification code has expired. Please request a new code."}')
+                    $response.OutputStream.Write($bytes, 0, $bytes.Length)
+                    $response.Close()
+                    continue
+                }
+
+                # Exact case-sensitive match (combination of a-z, 0-9, A-Z)
+                if ($challenge.code -cne $enteredCode) {
+                    $response.StatusCode = 400
+                    $bytes = [System.Text.Encoding]::UTF8.GetBytes('{"error": "Invalid verification code. Please check your email and enter the exact 8-character code."}')
+                    $response.OutputStream.Write($bytes, 0, $bytes.Length)
+                    $response.Close()
+                    continue
+                }
+
+                # Successful verification
+                $challenge.verified = $true
+                Write-Host "[MFA VERIFIED] User $email verified successfully!" -ForegroundColor Green
+
+                $response.ContentType = "application/json; charset=utf-8"
+                $respObj = [PSCustomObject]@{
+                    success = $true
+                    message = "Email successfully verified!"
+                    email = $challenge.email
+                    username = $challenge.username
+                    redirectUrl = "Application.html?verified=true&email=" + [System.Uri]::EscapeDataString($challenge.email) + "&username=" + [System.Uri]::EscapeDataString($challenge.username)
+                }
+                $bytes = [System.Text.Encoding]::UTF8.GetBytes(($respObj | ConvertTo-Json))
+                $response.OutputStream.Write($bytes, 0, $bytes.Length)
+            } catch {
+                $response.StatusCode = 500
+                $bytes = [System.Text.Encoding]::UTF8.GetBytes(('{"error": "' + $_.Exception.Message + '"}'))
+                $response.OutputStream.Write($bytes, 0, $bytes.Length)
+            }
             $response.Close()
             continue
         }

@@ -10,7 +10,8 @@ A collection of free, open-source web applications and utilities published for p
 An enterprise-grade, accessible multi-step job application portal and talent acquisition console.
 
 - **Folder**: [`Career Portal/`](./Career%20Portal)
-- **Application**: [`Career Portal/index.html`](./Career%20Portal/index.html) (or [`Career Portal/Application.html`](./Career%20Portal/Application.html))
+- **Registration & MFA Portal (Home)**: [`Career Portal/index.html`](./Career%20Portal/index.html)
+- **Job Application Form & Console**: [`Career Portal/Application.html`](./Career%20Portal/Application.html)
 - **PowerShell Backend Server**: [`Career Portal/server.ps1`](./Career%20Portal/server.ps1)
 - **Documentation**: [Career Portal README](./Career%20Portal/README.md)
 

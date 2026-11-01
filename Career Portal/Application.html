@@ -5413,6 +5413,28 @@
             });
         }
 
+        // Pre-populate verified user credentials from registration/MFA if present
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            const savedVerified = JSON.parse(localStorage.getItem('career_portal_verified_user') || '{}');
+            const verifiedEmail = urlParams.get('email') || savedVerified.email;
+            const verifiedUser = urlParams.get('username') || savedVerified.username;
+            if (verifiedEmail && emailInput && !emailInput.value) {
+                emailInput.value = verifiedEmail;
+                emailInput.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+            const userInput = document.getElementById('username');
+            if (verifiedUser && userInput && !userInput.value) {
+                userInput.value = verifiedUser;
+                userInput.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+            if (urlParams.get('verified') === 'true') {
+                setTimeout(() => {
+                    showToast(`✓ Welcome ${verifiedUser || 'Candidate'}! Email MFA verified. Complete your application below.`, 'success', 4000);
+                }, 400);
+            }
+        } catch (e) {}
+
         updateStepUI();
     });
 </script>

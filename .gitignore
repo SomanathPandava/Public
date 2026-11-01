@@ -7,4 +7,5 @@ test_*.ps1
 deep_*.ps1
 inventory.ps1
 *.cpuprofile
+Career Portal/JobApplications/mfa_emails.json
 
