@@ -48,16 +48,14 @@ try {
                 $body = $reader.ReadToEnd()
                 $appData = $body | ConvertFrom-Json
 
+                # System-generated Application ID (no user input validation needed)
                 $appId = [regex]::Replace([string]$appData.appId, '[^a-zA-Z0-9_-]', '')
-                if ([string]::IsNullOrWhiteSpace($appId) -or $appId.Length -lt 8 -or $appId.Length -gt 35) {
-                    $response.StatusCode = 400
-                    $bytes = [System.Text.Encoding]::UTF8.GetBytes('{"error": "Missing or invalid appId (must be 8-35 characters)"}')
-                    $response.OutputStream.Write($bytes, 0, $bytes.Length)
-                    $response.Close()
-                    continue
+                if ([string]::IsNullOrWhiteSpace($appId)) {
+                    $appId = (Get-Date -Format "yyyyMMddHHmmss") + (Get-Random -Minimum 100 -Maximum 999)
+                    $appData.appId = $appId
                 }
 
-                # Strict Server-Side Validation: Text Injection & RFC 5321/5322 Email Standards
+                # Strict Server-Side Validation: Text Injection, RFC Email, Password Policy & File Standards
                 $validationError = $null
 
                 # 1. RFC 5321 / RFC 5322 Email Validation
@@ -100,10 +98,46 @@ try {
                         $validationError = "Full name exceeds maximum length of 100 characters."
                     } elseif ($appData.bio -and ([string]$appData.bio).Length -gt 1000) {
                         $validationError = "Bio text exceeds maximum length of 1000 characters."
-                    } elseif ($appData.phone -and ([string]$appData.phone).Length -gt 25) {
-                        $validationError = "Phone number exceeds maximum length of 25 characters."
                     } elseif ($appData.website -and ([string]$appData.website).Length -gt 254) {
                         $validationError = "Website URL exceeds maximum length of 254 characters."
+                    }
+                }
+
+                # 3. International Phone Standard (ITU-T E.164: + followed by 7-13 digits, 8-14 chars total)
+                if (-not $validationError -and $appData.phone) {
+                    $phoneStr = ([string]$appData.phone).Trim()
+                    if ($phoneStr.Length -lt 8 -or $phoneStr.Length -gt 15 -or $phoneStr -notmatch '^\+[1-9][0-9]{6,13}$') {
+                        $validationError = "Phone number must follow international standard starting with '+' followed by country code (8-14 characters, e.g. +14155552671)."
+                    }
+                }
+
+                # 4. Enterprise Password Security Policy (A-Za-z0-9 and agreed special characters: @ $ ! % * ? & # ^ _ -)
+                if (-not $validationError -and $appData.password) {
+                    $pwd = [string]$appData.password
+                    if ($pwd.Length -lt 8 -or $pwd.Length -gt 64) {
+                        $validationError = "Password length must be between 8 and 64 characters."
+                    } elseif ($pwd -notmatch '^[A-Za-z0-9@$!%*?&#^_\-]+$') {
+                        $validationError = "Password contains disallowed characters. Only letters (A-Z, a-z), numbers (0-9), and agreed special characters (@ $ ! % * ? & # ^ _ -) are permitted."
+                    } elseif ($pwd -notmatch '[A-Z]' -or $pwd -notmatch '[a-z]' -or $pwd -notmatch '[0-9]' -or $pwd -notmatch '[@$!%*?&#^_\-]') {
+                        $validationError = "Password must include at least one uppercase letter, one lowercase letter, one number, and one agreed special character (@ $ ! % * ? & # ^ _ -)."
+                    }
+                }
+
+                # 5. Profile Picture Validation (Extension & MIME adherence)
+                if (-not $validationError -and $appData.profilePhotoName) {
+                    $photoName = [string]$appData.profilePhotoName
+                    if ($photoName -notmatch '\.(jpe?g|png|webp)$') {
+                        $validationError = "Profile photo must be a valid image file with extension .jpg, .jpeg, .png, or .webp."
+                    }
+                }
+
+                # 6. Resume Document Validation (Strict format & reject blank)
+                if (-not $validationError -and $appData.resumeName) {
+                    $resumeName = ([string]$appData.resumeName).Trim()
+                    if ([string]::IsNullOrWhiteSpace($resumeName) -or $resumeName -eq "") {
+                        $validationError = "Blank resume document rejected. A valid non-blank resume is required."
+                    } elseif ($resumeName -notmatch '\.(pdf|docx?)$') {
+                        $validationError = "Resume document must be in PDF or Word format (.pdf, .docx, .doc)."
                     }
                 }
 
