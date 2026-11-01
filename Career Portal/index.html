@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Career Portal - Sign In &amp; Candidate Onboarding</title>
-    <meta name="description" content="Sign in or register for the Career Portal. Secure authentication and verification.">
+    <title>Career Portal - Authentication &amp; Candidate Portal</title>
+    <meta name="description" content="Sign in, register, and manage your job applications in the Career Portal.">
     <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
     <style>
         :root {
@@ -25,8 +25,8 @@
             --success-bg: #d1fae5;
             --warning: #f59e0b;
             --warning-bg: #fef3c7;
-            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
-            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             --radius: 12px;
             --transition: all 0.2s ease-in-out;
         }
@@ -49,7 +49,7 @@
             --success-bg: rgba(16, 185, 129, 0.15);
             --warning: #fbbf24;
             --warning-bg: rgba(245, 158, 11, 0.15);
-            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
         }
 
         * {
@@ -65,97 +65,98 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            line-height: 1.5;
-            transition: background-color var(--transition), color var(--transition);
+            line-height: 1.6;
+            padding: 20px;
+            transition: background-color 0.25s, color 0.25s;
         }
 
-        /* Top Header Navigation */
-        .portal-header {
-            background-color: var(--surface);
-            border-bottom: 1px solid var(--border-color);
-            padding: 16px 24px;
+        /* Fixed / Centered Container Aligned with Application.html */
+        .portal-wrapper {
+            max-width: 860px;
+            width: 100%;
+            margin: 0 auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Application Navigation Bar - Perfectly matches Application.html styling & container width */
+        .app-navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-
-        .portal-brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            color: var(--text-primary);
-        }
-
-        .portal-logo-icon {
-            width: 36px;
-            height: 36px;
-            background: linear-gradient(135deg, var(--primary), #4f46e5);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ffffff;
-            font-weight: 700;
-            font-size: 1.15rem;
-        }
-
-        .portal-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-
-        .portal-tagline {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .theme-toggle-btn {
-            background: transparent;
+            padding: 12px 18px;
+            background: var(--surface);
             border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            width: 38px;
-            height: 38px;
             border-radius: 8px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+            gap: 12px;
+            transition: background-color 0.25s, border-color 0.25s;
+        }
+
+        .brand-link {
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.15rem;
             cursor: pointer;
-            font-size: 1.1rem;
-            transition: var(--transition);
         }
 
-        .theme-toggle-btn:hover {
-            background-color: var(--surface-subtle);
-        }
-
-        /* Main Container */
-        .main-container {
-            flex: 1;
+        .nav-actions {
             display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 40px 16px;
+            gap: 10px;
+            margin-left: auto;
         }
 
+        .nav-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--surface-subtle);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-link-btn:hover {
+            background: var(--border-color);
+        }
+
+        /* Main Container for Auth / Home */
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex: 1;
+            padding-bottom: 30px;
+        }
+
+        /* Auth Card - Clean, not stretched, perfectly centered */
         .auth-card {
             background-color: var(--surface);
             border: 1px solid var(--border-color);
             border-radius: var(--radius);
             box-shadow: var(--card-shadow);
             width: 100%;
-            max-width: 500px;
+            max-width: 520px;
             padding: 36px 32px;
             position: relative;
             overflow: hidden;
+            transition: max-width 0.3s ease;
+        }
+
+        .auth-card.dashboard-mode {
+            max-width: 820px;
         }
 
         .auth-card::before {
@@ -166,44 +167,6 @@
             right: 0;
             height: 4px;
             background: linear-gradient(90deg, var(--primary), #6366f1, #06b6d4);
-        }
-
-        /* Segmented Navigation Tab (Sign In / Sign Up) */
-        .auth-tab-group {
-            display: flex;
-            background-color: var(--surface-subtle);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 4px;
-            margin-bottom: 26px;
-            gap: 4px;
-        }
-
-        .auth-tab-btn {
-            flex: 1;
-            padding: 10px 16px;
-            font-size: 0.92rem;
-            font-weight: 700;
-            border: none;
-            background: transparent;
-            color: var(--text-muted);
-            border-radius: 7px;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        .auth-tab-btn:hover:not(.active) {
-            color: var(--text-primary);
-        }
-
-        .auth-tab-btn.active {
-            background-color: var(--surface);
-            color: var(--primary);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
         }
 
         .card-header {
@@ -268,23 +231,26 @@
         input[type="email"],
         input[type="password"] {
             width: 100%;
-            padding: 12px 14px;
-            border: 1px solid var(--border-color);
-            background-color: var(--surface);
-            color: var(--text-primary);
-            border-radius: 8px;
+            padding: 10px 14px;
             font-size: 0.95rem;
+            font-family: inherit;
+            color: var(--text-primary);
+            background-color: var(--surface);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
             outline: none;
             transition: var(--transition);
-        }
-
-        .input-wrapper input {
-            padding-right: 42px;
         }
 
         input:focus {
             border-color: var(--border-focus);
             box-shadow: 0 0 0 3px var(--focus-ring);
+        }
+
+        input:disabled {
+            background-color: var(--surface-subtle);
+            cursor: not-allowed;
+            opacity: 0.7;
         }
 
         .toggle-pwd-btn {
@@ -295,11 +261,10 @@
             color: var(--text-muted);
             cursor: pointer;
             padding: 4px;
+            font-size: 1.05rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.1rem;
-            border-radius: 4px;
         }
 
         .toggle-pwd-btn:hover {
@@ -309,73 +274,59 @@
         .hint {
             font-size: 0.78rem;
             color: var(--text-muted);
+            line-height: 1.35;
         }
 
-        .hint.error {
-            color: var(--danger);
-            font-weight: 500;
-        }
-
-        .hint.success {
-            color: var(--success);
-            font-weight: 500;
-        }
-
-        /* Password Strength Meter */
+        /* Live Password Strength Meter */
         .password-strength-box {
-            margin-top: 6px;
+            margin-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
 
         .password-strength-header {
             display: flex;
             justify-content: space-between;
             font-size: 0.75rem;
-            margin-bottom: 4px;
         }
 
         .strength-bars {
             display: flex;
             gap: 4px;
             height: 4px;
-            width: 100%;
         }
 
         .strength-bar {
             flex: 1;
-            height: 100%;
             background-color: var(--surface-subtle);
             border-radius: 2px;
-            transition: background-color 0.2s ease;
+            transition: background-color 0.25s ease;
         }
 
         /* Buttons */
         .btn-submit {
             width: 100%;
+            padding: 12px 18px;
             background-color: var(--primary);
             color: #ffffff;
             border: none;
-            padding: 14px 20px;
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 700;
             cursor: pointer;
+            transition: var(--transition);
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            transition: var(--transition);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
-            margin-top: 6px;
+            margin-top: 10px;
         }
 
         .btn-submit:hover:not(:disabled) {
             background-color: var(--primary-hover);
             transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
-        }
-
-        .btn-submit:active:not(:disabled) {
-            transform: translateY(0);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
         }
 
         .btn-submit:disabled {
@@ -433,12 +384,12 @@
 
         .mfa-header {
             text-align: center;
-            margin-bottom: 22px;
+            margin-bottom: 20px;
         }
 
         .mfa-icon-badge {
-            width: 54px;
-            height: 54px;
+            width: 56px;
+            height: 56px;
             background: var(--primary-light);
             color: var(--primary);
             border-radius: 50%;
@@ -446,36 +397,35 @@
             align-items: center;
             justify-content: center;
             font-size: 1.6rem;
-            margin: 0 auto 14px auto;
+            margin: 0 auto 12px auto;
         }
 
         .email-display-badge {
             display: inline-block;
             background-color: var(--surface-subtle);
             border: 1px solid var(--border-color);
-            padding: 6px 14px;
-            border-radius: 9999px;
-            font-family: monospace;
-            font-weight: 600;
-            font-size: 0.88rem;
-            margin: 8px 0;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.9rem;
             color: var(--text-primary);
+            margin-top: 6px;
         }
 
         /* Simulated Inbox Preview Banner */
         .simulated-inbox-banner {
-            background: linear-gradient(135deg, rgba(37,99,235,0.06), rgba(99,102,241,0.08));
-            border: 1px solid rgba(37, 99, 235, 0.3);
-            border-radius: 10px;
-            padding: 14px 16px;
-            margin-bottom: 22px;
+            background-color: var(--surface-subtle);
+            border: 1px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin-bottom: 20px;
+            font-size: 0.82rem;
         }
 
         .simulated-inbox-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.78rem;
             color: var(--text-muted);
             margin-bottom: 6px;
             font-weight: 600;
@@ -525,8 +475,8 @@
         }
 
         .mfa-slot-input {
-            width: 46px;
-            height: 52px;
+            width: 44px;
+            height: 50px;
             font-size: 1.35rem;
             font-weight: 700;
             font-family: monospace;
@@ -575,38 +525,145 @@
             text-decoration: none;
         }
 
-        /* Success Card */
-        #success_section {
+        /* Candidate Dashboard Section (Apply & Retrieve Application Buttons) */
+        #candidate_dashboard_section {
             display: none;
+        }
+
+        .dashboard-welcome {
             text-align: center;
+            margin-bottom: 24px;
         }
 
-        .success-icon-badge {
-            width: 60px;
-            height: 60px;
-            background: var(--success-bg);
-            color: var(--success);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            margin: 0 auto 14px auto;
+        .dashboard-actions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
         }
 
-        .success-details {
-            background-color: var(--surface-subtle);
-            border-radius: 8px;
-            padding: 16px;
-            text-align: left;
-            margin: 20px 0;
-            font-size: 0.88rem;
+        @media (max-width: 580px) {
+            .dashboard-actions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .action-card-btn {
+            background: var(--surface);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 22px 18px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            align-items: center;
+            text-align: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            color: inherit;
         }
 
-        .success-details strong {
+        .action-card-btn:hover {
+            border-color: var(--primary);
+            box-shadow: 0 6px 18px rgba(37, 99, 235, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .action-card-btn.active {
+            border-color: var(--primary);
+            background-color: var(--primary-light);
+        }
+
+        .action-card-icon {
+            font-size: 2.2rem;
+        }
+
+        .action-card-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .action-card-desc {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Retrieved Applications Panel */
+        #retrieved_apps_panel {
+            display: none;
+            border-top: 1px dashed var(--border-color);
+            padding-top: 20px;
+            margin-top: 16px;
+        }
+
+        .app-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background-color: var(--surface-subtle);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .app-list-item:hover {
+            border-color: var(--primary);
+            background-color: var(--surface);
+        }
+
+        .badge-status {
+            padding: 3px 8px;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: capitalize;
+        }
+
+        .badge-submitted {
+            background-color: var(--success-bg);
+            color: var(--success);
+        }
+
+        .badge-draft {
+            background-color: var(--warning-bg);
+            color: var(--warning);
+        }
+
+        /* Detail Modal / Card */
+        #app_detail_card {
+            display: none;
+            background-color: var(--surface);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 18px;
+            margin-top: 16px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid var(--surface-subtle);
+            font-size: 0.88rem;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .detail-val {
+            font-weight: 600;
             color: var(--text-primary);
         }
 
@@ -617,6 +674,7 @@
             text-align: center;
             font-size: 0.82rem;
             color: var(--text-muted);
+            margin-top: auto;
         }
 
         .portal-footer a {
@@ -629,6 +687,9 @@
         }
 
         @media (max-width: 520px) {
+            body {
+                padding: 12px 8px;
+            }
             .auth-card {
                 padding: 24px 18px;
             }
@@ -636,7 +697,7 @@
                 gap: 4px;
             }
             .mfa-slot-input {
-                width: 36px;
+                width: 35px;
                 height: 46px;
                 font-size: 1.15rem;
             }
@@ -645,267 +706,312 @@
 </head>
 <body>
 
-    <!-- Header Navigation (Clean brand & Theme toggle only, no application form at top) -->
-    <header class="portal-header">
-        <a href="index.html" class="portal-brand">
-            <div class="portal-logo-icon">CP</div>
-            <div>
-                <div class="portal-title">Career Portal</div>
-                <div class="portal-tagline">Candidate Onboarding &amp; Authentication</div>
+    <div class="portal-wrapper">
+
+        <!-- Top Navigation Bar (Matches Application.html layout and container width) -->
+        <nav class="app-navbar" aria-label="Main Navigation">
+            <a href="index.html" class="brand-link" title="Careers Portal Home">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                <span>Careers Portal</span>
+            </a>
+
+            <!-- Right-pinned Actions: Theme Toggle is ALWAYS pinned to top-right corner -->
+            <div class="nav-actions">
+                <span id="nav_user_badge" style="display: none; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-right: 4px;"></span>
+                <button type="button" id="theme_toggle_btn" class="nav-link-btn" title="Toggle Dark / Light Theme" aria-label="Toggle Theme">
+                    <span id="theme_icon">🌙</span> <span id="theme_text">Dark</span>
+                </button>
             </div>
-        </a>
-        <div class="header-actions">
-            <button type="button" id="theme_toggle_btn" class="theme-toggle-btn" aria-label="Toggle dark and light theme" title="Toggle Theme">
-                <span id="theme_icon">🌓</span>
-            </button>
-        </div>
-    </header>
+        </nav>
 
-    <!-- Main Content Area -->
-    <main class="main-container">
+        <!-- Main Content Area -->
+        <main class="main-container">
 
-        <!-- AUTHENTICATION CARD (SIGN IN & SIGN UP) -->
-        <div class="auth-card">
+            <div class="auth-card" id="main_card">
 
-            <!-- 1. SIGN IN SECTION (Default Initial View for Existing Users) -->
-            <section id="signin_section" aria-labelledby="signin_heading">
-                <!-- Segmented Tab Navigation -->
-                <nav class="auth-tab-group" aria-label="Authentication Options">
-                    <button type="button" class="auth-tab-btn active" id="tab_signin" onclick="switchAuthView('signin')">Sign In</button>
-                    <button type="button" class="auth-tab-btn" id="tab_signup_from_signin" onclick="switchAuthView('signup')">Sign Up</button>
-                </nav>
-
-                <div class="card-header">
-                    <span class="card-badge">Existing Candidates</span>
-                    <h1 id="signin_heading" class="card-title">Welcome Back</h1>
-                    <p class="card-desc">Sign in with your username or email address to continue.</p>
-                </div>
-
-                <!-- Error/Success Alert Box -->
-                <div id="signin_alert" class="alert-box" role="alert"></div>
-
-                <!-- Sign In Form (Strictly NO rule suggestions or length hints) -->
-                <form id="signin_form" novalidate autocomplete="on">
-                    <div class="form-group">
-                        <label for="signin_identifier">Username or Email Address</label>
-                        <div class="input-wrapper">
-                            <input type="text" id="signin_identifier" name="signin_identifier" placeholder="Enter username or email" required autocomplete="username" autofocus>
-                        </div>
+                <!-- 1. SIGN IN SECTION (Default Initial Screen for Existing Users) -->
+                <!-- Sign in and sign up tab bar at top removed as requested; switch link is below -->
+                <section id="signin_section" aria-labelledby="signin_heading">
+                    <div class="card-header">
+                        <span class="card-badge">Candidate Authentication</span>
+                        <h1 id="signin_heading" class="card-title">Sign In</h1>
+                        <p class="card-desc">Enter your username or email address and password to sign in.</p>
                     </div>
 
-                    <div class="form-group">
-                        <label for="signin_password">Password</label>
-                        <div class="input-wrapper">
-                            <input type="password" id="signin_password" name="signin_password" placeholder="Enter your password" required autocomplete="current-password">
-                            <button type="button" class="toggle-pwd-btn" onclick="togglePasswordVisibility('signin_password', this)" title="Show/Hide Password" aria-label="Toggle password visibility">👁️</button>
-                        </div>
-                    </div>
+                    <!-- Error/Success Alert Box -->
+                    <div id="signin_alert" class="alert-box" role="alert"></div>
 
-                    <button type="submit" id="btn_signin_submit" class="btn-submit">
-                        <span id="signin_btn_text">Sign In</span>
-                        <span id="signin_btn_spinner" style="display: none;">⏳</span>
-                        <span>&rarr;</span>
-                    </button>
-                </form>
-
-                <div style="margin-top: 20px; text-align: center; font-size: 0.88rem; color: var(--text-muted);">
-                    Don't have an account? <button type="button" onclick="switchAuthView('signup')" style="background: none; border: none; color: var(--primary); font-weight: 700; cursor: pointer; text-decoration: underline; font-size: 0.88rem;">Sign Up here</button>
-                </div>
-            </section>
-
-            <!-- 2. SIGN UP / REGISTRATION SECTION (For New Users) -->
-            <section id="signup_section" style="display: none;" aria-labelledby="signup_heading">
-                <!-- Segmented Tab Navigation -->
-                <nav class="auth-tab-group" aria-label="Authentication Options">
-                    <button type="button" class="auth-tab-btn" id="tab_signin_from_signup" onclick="switchAuthView('signin')">Sign In</button>
-                    <button type="button" class="auth-tab-btn active" id="tab_signup" onclick="switchAuthView('signup')">Sign Up</button>
-                </nav>
-
-                <div class="card-header">
-                    <span class="card-badge">New Candidates</span>
-                    <h2 id="signup_heading" class="card-title">Create Your Account</h2>
-                    <p class="card-desc">Enter your credentials to register. We will send an 8-character verification code to your email.</p>
-                </div>
-
-                <!-- Error/Success Alert Box -->
-                <div id="register_alert" class="alert-box" role="alert"></div>
-
-                <form id="registration_form" novalidate autocomplete="on">
-                    <input type="hidden" name="csrf_token" id="csrf_token" value="">
-
-                    <!-- Username Input -->
-                    <div class="form-group">
-                        <label for="username">
-                            <span>Username <span class="required-star">*</span></span>
-                            <span id="username_counter" class="hint">0/30</span>
-                        </label>
-                        <div class="input-wrapper">
-                            <input type="text" id="username" name="username" placeholder="e.g. john_doe" minlength="4" maxlength="30" pattern="^[a-zA-Z0-9_.-]{4,30}$" required autocomplete="username">
-                        </div>
-                        <span id="username_hint" class="hint">4-30 characters: letters, numbers, hyphens, periods, or underscores.</span>
-                    </div>
-
-                    <!-- Email Input (No RFC standard text below input box) -->
-                    <div class="form-group">
-                        <label for="email">
-                            <span>Email Address <span class="required-star">*</span></span>
-                            <span id="email_counter" class="hint">0/254</span>
-                        </label>
-                        <div class="input-wrapper">
-                            <input type="email" id="email" name="email" placeholder="john.doe@example.com" minlength="3" maxlength="254" required autocomplete="email">
-                        </div>
-                        <span id="email_hint" class="hint"></span>
-                    </div>
-
-                    <!-- Password Input (Changed 'Agreed' to 'allowed') -->
-                    <div class="form-group">
-                        <label for="password">
-                            <span>Password <span class="required-star">*</span></span>
-                            <span id="password_counter" class="hint">0/64</span>
-                        </label>
-                        <div class="input-wrapper">
-                            <input type="password" id="password" name="password" placeholder="Enter secure password" minlength="8" maxlength="64" required autocomplete="new-password">
-                            <button type="button" class="toggle-pwd-btn" onclick="togglePasswordVisibility('password', this)" title="Show/Hide Password" aria-label="Toggle password visibility">👁️</button>
-                        </div>
-                        <span id="password_hint" class="hint">8-64 chars: A-Z, a-z, 0-9, and allowed special characters (@ $ ! % * ? &amp; # ^ _ -).</span>
-
-                        <!-- Live Password Strength Meter -->
-                        <div class="password-strength-box">
-                            <div class="password-strength-header">
-                                <span style="color: var(--text-muted);">Security Strength:</span>
-                                <span id="password_strength_label" style="font-weight: 700; color: #94a3b8;">Not entered</span>
-                            </div>
-                            <div class="strength-bars">
-                                <div id="pwd_bar_1" class="strength-bar"></div>
-                                <div id="pwd_bar_2" class="strength-bar"></div>
-                                <div id="pwd_bar_3" class="strength-bar"></div>
-                                <div id="pwd_bar_4" class="strength-bar"></div>
+                    <!-- Sign In Form (Strictly NO rule suggestions or length hints) -->
+                    <form id="signin_form" novalidate autocomplete="on">
+                        <div class="form-group">
+                            <label for="signin_identifier">Username or Email Address</label>
+                            <div class="input-wrapper">
+                                <input type="text" id="signin_identifier" name="signin_identifier" placeholder="Enter username or email" required autocomplete="username" autofocus>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Confirm Password Input -->
-                    <div class="form-group">
-                        <label for="confirm_password">
-                            <span>Confirm Password <span class="required-star">*</span></span>
-                        </label>
-                        <div class="input-wrapper">
-                            <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter your password" minlength="8" maxlength="64" required autocomplete="new-password">
-                            <button type="button" class="toggle-pwd-btn" onclick="togglePasswordVisibility('confirm_password', this)" title="Show/Hide Password" aria-label="Toggle confirm password visibility">👁️</button>
+                        <div class="form-group">
+                            <label for="signin_password">Password</label>
+                            <div class="input-wrapper">
+                                <input type="password" id="signin_password" name="signin_password" placeholder="Enter your password" required autocomplete="current-password">
+                                <button type="button" class="toggle-pwd-btn" onclick="togglePasswordVisibility('signin_password', this)" title="Show/Hide Password" aria-label="Toggle password visibility">👁️</button>
+                            </div>
                         </div>
-                        <span id="confirm_password_hint" class="hint">Must match password exactly.</span>
+
+                        <button type="submit" id="btn_signin_submit" class="btn-submit">
+                            <span id="signin_btn_text">Sign In &amp; Verify</span>
+                            <span id="signin_btn_spinner" style="display: none;">⏳</span>
+                            <span>&rarr;</span>
+                        </button>
+                    </form>
+
+                    <div style="margin-top: 22px; text-align: center; font-size: 0.88rem; color: var(--text-muted);">
+                        Don't have an account? <button type="button" onclick="switchAuthView('signup')" style="background: none; border: none; color: var(--primary); font-weight: 700; cursor: pointer; text-decoration: underline; font-size: 0.88rem;">Sign Up here</button>
+                    </div>
+                </section>
+
+                <!-- 2. SIGN UP / REGISTRATION SECTION (For New Users) -->
+                <section id="signup_section" style="display: none;" aria-labelledby="signup_heading">
+                    <div class="card-header">
+                        <span class="card-badge">New Candidates</span>
+                        <h2 id="signup_heading" class="card-title">Create Your Account</h2>
+                        <p class="card-desc">Enter your credentials to register. An 8-character verification code will be sent to your email.</p>
                     </div>
 
-                    <!-- Submit Button -->
-                    <button type="submit" id="btn_register_submit" class="btn-submit">
-                        <span id="register_btn_text">Sign Up &amp; Send Verification Code</span>
-                        <span id="register_btn_spinner" style="display: none;">⏳</span>
-                        <span>&rarr;</span>
-                    </button>
-                </form>
+                    <!-- Error/Success Alert Box -->
+                    <div id="register_alert" class="alert-box" role="alert"></div>
 
-                <div style="margin-top: 20px; text-align: center; font-size: 0.88rem; color: var(--text-muted);">
-                    Already registered? <button type="button" onclick="switchAuthView('signin')" style="background: none; border: none; color: var(--primary); font-weight: 700; cursor: pointer; text-decoration: underline; font-size: 0.88rem;">Sign In here</button>
-                </div>
-            </section>
+                    <form id="registration_form" novalidate autocomplete="on">
+                        <input type="hidden" name="csrf_token" id="csrf_token" value="">
 
-            <!-- 3. MFA VERIFICATION SECTION (Revealed Upon Registration Submission) -->
-            <section id="mfa_section" aria-labelledby="mfa_heading">
-                <div class="mfa-header">
-                    <div class="mfa-icon-badge">🛡️</div>
-                    <span class="card-badge" style="background-color: var(--success-bg); color: var(--success);">Security Verification</span>
-                    <h2 id="mfa_heading" class="card-title">Verify Your Email Address</h2>
-                    <p class="card-desc">An 8-character verification code has been dispatched to:</p>
-                    <div><span id="mfa_target_email" class="email-display-badge">user@example.com</span></div>
-                </div>
-
-                <!-- Simulated Inbox Notification Preview (Permits Instant Local Testing) -->
-                <aside class="simulated-inbox-banner" aria-label="Simulated Mail Notification">
-                    <div class="simulated-inbox-header">
-                        <span>📬 Simulated Mail Delivery Notification</span>
-                        <span id="simulated_email_time">Just now</span>
-                    </div>
-                    <div class="simulated-inbox-code-row">
-                        <div>
-                            <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 2px;">Your 8-Character Verification Code (a-z, 0-9):</div>
-                            <span id="simulated_mfa_code" class="mfa-code-pill">--------</span>
+                        <!-- Username Input -->
+                        <div class="form-group">
+                            <label for="username">
+                                <span>Username <span class="required-star">*</span></span>
+                                <span id="username_counter" class="hint">0/30</span>
+                            </label>
+                            <div class="input-wrapper">
+                                <input type="text" id="username" name="username" placeholder="e.g. john_doe" minlength="4" maxlength="30" pattern="^[a-zA-Z0-9_.-]{4,30}$" required autocomplete="username">
+                            </div>
+                            <span id="username_hint" class="hint">4-30 characters: letters, numbers, hyphens, periods, or underscores.</span>
                         </div>
-                        <button type="button" id="btn_autofill_mfa" class="btn-autofill" onclick="autoFillMfaCode()" title="Auto-fill the received code into the input boxes">
-                            📋 Auto-fill Code
+
+                        <!-- Email Input (No RFC standard text below input box) -->
+                        <div class="form-group">
+                            <label for="email">
+                                <span>Email Address <span class="required-star">*</span></span>
+                                <span id="email_counter" class="hint">0/254</span>
+                            </label>
+                            <div class="input-wrapper">
+                                <input type="email" id="email" name="email" placeholder="john.doe@example.com" minlength="3" maxlength="254" required autocomplete="email">
+                            </div>
+                            <span id="email_hint" class="hint"></span>
+                        </div>
+
+                        <!-- Password Input (Changed 'Agreed' to 'allowed') -->
+                        <div class="form-group">
+                            <label for="password">
+                                <span>Password <span class="required-star">*</span></span>
+                                <span id="password_counter" class="hint">0/64</span>
+                            </label>
+                            <div class="input-wrapper">
+                                <input type="password" id="password" name="password" placeholder="Enter secure password" minlength="8" maxlength="64" required autocomplete="new-password">
+                                <button type="button" class="toggle-pwd-btn" onclick="togglePasswordVisibility('password', this)" title="Show/Hide Password" aria-label="Toggle password visibility">👁️</button>
+                            </div>
+                            <span id="password_hint" class="hint">8-64 chars: A-Z, a-z, 0-9, and allowed special characters (@ $ ! % * ? &amp; # ^ _ -).</span>
+
+                            <!-- Live Password Strength Meter -->
+                            <div class="password-strength-box">
+                                <div class="password-strength-header">
+                                    <span style="color: var(--text-muted);">Security Strength:</span>
+                                    <span id="password_strength_label" style="font-weight: 700; color: #94a3b8;">Not entered</span>
+                                </div>
+                                <div class="strength-bars">
+                                    <div id="pwd_bar_1" class="strength-bar"></div>
+                                    <div id="pwd_bar_2" class="strength-bar"></div>
+                                    <div id="pwd_bar_3" class="strength-bar"></div>
+                                    <div id="pwd_bar_4" class="strength-bar"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Confirm Password Input -->
+                        <div class="form-group">
+                            <label for="confirm_password">
+                                <span>Confirm Password <span class="required-star">*</span></span>
+                            </label>
+                            <div class="input-wrapper">
+                                <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter your password" minlength="8" maxlength="64" required autocomplete="new-password">
+                                <button type="button" class="toggle-pwd-btn" onclick="togglePasswordVisibility('confirm_password', this)" title="Show/Hide Password" aria-label="Toggle confirm password visibility">👁️</button>
+                            </div>
+                            <span id="confirm_password_hint" class="hint">Must match password exactly.</span>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" id="btn_register_submit" class="btn-submit">
+                            <span id="register_btn_text">Sign Up &amp; Send Verification Code</span>
+                            <span id="register_btn_spinner" style="display: none;">⏳</span>
+                            <span>&rarr;</span>
+                        </button>
+                    </form>
+
+                    <div style="margin-top: 22px; text-align: center; font-size: 0.88rem; color: var(--text-muted);">
+                        Already registered? <button type="button" onclick="switchAuthView('signin')" style="background: none; border: none; color: var(--primary); font-weight: 700; cursor: pointer; text-decoration: underline; font-size: 0.88rem;">Sign In here</button>
+                    </div>
+                </section>
+
+                <!-- 3. MFA VERIFICATION SECTION (Used for BOTH Sign In and Sign Up) -->
+                <section id="mfa_section" aria-labelledby="mfa_heading">
+                    <div class="mfa-header">
+                        <div class="mfa-icon-badge">🛡️</div>
+                        <span class="card-badge" style="background-color: var(--success-bg); color: var(--success);" id="mfa_badge_text">MFA Verification</span>
+                        <h2 id="mfa_heading" class="card-title">Security Verification</h2>
+                        <p class="card-desc" id="mfa_sub_desc">An 8-character verification code has been dispatched to your email:</p>
+                        <div><span id="mfa_target_email" class="email-display-badge">user@example.com</span></div>
+                    </div>
+
+                    <!-- Simulated Inbox Notification Preview (Permits Instant Local Testing) -->
+                    <aside class="simulated-inbox-banner" aria-label="Simulated Mail Notification">
+                        <div class="simulated-inbox-header">
+                            <span>📬 Simulated Mail Delivery Notification</span>
+                            <span id="simulated_email_time">Just now</span>
+                        </div>
+                        <div class="simulated-inbox-code-row">
+                            <div>
+                                <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 2px;">Your 8-Character Verification Code (a-z, 0-9):</div>
+                                <span id="simulated_mfa_code" class="mfa-code-pill">--------</span>
+                            </div>
+                            <button type="button" id="btn_autofill_mfa" class="btn-autofill" onclick="autoFillMfaCode()" title="Auto-fill the received code into the input boxes">
+                                📋 Auto-fill Code
+                            </button>
+                        </div>
+                    </aside>
+
+                    <!-- Error/Success Alert Box -->
+                    <div id="mfa_alert" class="alert-box" role="alert"></div>
+
+                    <form id="mfa_form" novalidate>
+                        <div class="form-group" style="text-align: center;">
+                            <label style="justify-content: center; margin-bottom: 12px;">Enter the 8-character code (a-z, 0-9):</label>
+                            
+                            <!-- 8 Discrete Character Slots for a-z, 0-9 (no A-Z) -->
+                            <div class="mfa-slots-container" id="mfa_slots_group">
+                                <input type="text" class="mfa-slot-input" maxlength="1" id="slot_1" data-index="1" autocomplete="off" autofocus>
+                                <input type="text" class="mfa-slot-input" maxlength="1" id="slot_2" data-index="2" autocomplete="off">
+                                <input type="text" class="mfa-slot-input" maxlength="1" id="slot_3" data-index="3" autocomplete="off">
+                                <input type="text" class="mfa-slot-input" maxlength="1" id="slot_4" data-index="4" autocomplete="off">
+                                <input type="text" class="mfa-slot-input" maxlength="1" id="slot_5" data-index="5" autocomplete="off">
+                                <input type="text" class="mfa-slot-input" maxlength="1" id="slot_6" data-index="6" autocomplete="off">
+                                <input type="text" class="mfa-slot-input" maxlength="1" id="slot_7" data-index="7" autocomplete="off">
+                                <input type="text" class="mfa-slot-input" maxlength="1" id="slot_8" data-index="8" autocomplete="off">
+                            </div>
+                            <span id="mfa_code_hint" class="hint">8 characters: lowercase letters (a-z) and digits (0-9).</span>
+                        </div>
+
+                        <div class="mfa-timer-row">
+                            <span>Code expires in: <strong id="mfa_countdown" style="color: var(--text-primary); font-family: monospace;">15:00</strong></span>
+                            <button type="button" id="btn_resend_mfa" class="btn-resend" onclick="resendMfaCode()">Resend Code</button>
+                        </div>
+
+                        <button type="submit" id="btn_verify_submit" class="btn-submit">
+                            <span id="verify_btn_text">Verify Code &amp; Continue</span>
+                            <span id="verify_btn_spinner" style="display: none;">⏳</span>
+                        </button>
+                    </form>
+
+                    <div style="margin-top: 18px; text-align: center;">
+                        <button type="button" class="btn-secondary" onclick="returnToAuthView()" style="font-size: 0.82rem;">
+                            &larr; Back
                         </button>
                     </div>
-                </aside>
+                </section>
 
-                <!-- Error/Success Alert Box -->
-                <div id="mfa_alert" class="alert-box" role="alert"></div>
+                <!-- 4. CANDIDATE HOME LANDING SCREEN (Apply & Retrieve Application Options) -->
+                <section id="candidate_dashboard_section" aria-labelledby="dashboard_heading">
+                    <div class="dashboard-welcome">
+                        <span class="card-badge" style="background-color: var(--success-bg); color: var(--success);">Authenticated Candidate</span>
+                        <h2 id="dashboard_heading" class="card-title">Welcome to Career Portal</h2>
+                        <p class="card-desc">Welcome back, <strong id="dashboard_username" style="color: var(--text-primary);">Candidate</strong> (<span id="dashboard_email">user@example.com</span>). What would you like to do?</p>
+                    </div>
 
-                <form id="mfa_form" novalidate>
-                    <div class="form-group" style="text-align: center;">
-                        <label style="justify-content: center; margin-bottom: 12px;">Enter the 8-character code (a-z, 0-9):</label>
-                        
-                        <!-- 8 Discrete Character Slots for a-z, 0-9 (no A-Z) -->
-                        <div class="mfa-slots-container" id="mfa_slots_group">
-                            <input type="text" class="mfa-slot-input" maxlength="1" id="slot_1" data-index="1" autocomplete="off" autofocus>
-                            <input type="text" class="mfa-slot-input" maxlength="1" id="slot_2" data-index="2" autocomplete="off">
-                            <input type="text" class="mfa-slot-input" maxlength="1" id="slot_3" data-index="3" autocomplete="off">
-                            <input type="text" class="mfa-slot-input" maxlength="1" id="slot_4" data-index="4" autocomplete="off">
-                            <input type="text" class="mfa-slot-input" maxlength="1" id="slot_5" data-index="5" autocomplete="off">
-                            <input type="text" class="mfa-slot-input" maxlength="1" id="slot_6" data-index="6" autocomplete="off">
-                            <input type="text" class="mfa-slot-input" maxlength="1" id="slot_7" data-index="7" autocomplete="off">
-                            <input type="text" class="mfa-slot-input" maxlength="1" id="slot_8" data-index="8" autocomplete="off">
+                    <!-- 2 Main Option Buttons: Apply and Retrieve Application -->
+                    <div class="dashboard-actions-grid">
+                        <button type="button" class="action-card-btn" id="btn_card_apply" onclick="proceedToApply()">
+                            <div class="action-card-icon">📝</div>
+                            <div class="action-card-title">Apply</div>
+                            <div class="action-card-desc">Start a new job application and register your candidate profile credentials.</div>
+                            <span class="btn-submit" style="margin-top: auto; padding: 8px 14px; font-size: 0.85rem;">Open Application Form &rarr;</span>
+                        </button>
+
+                        <button type="button" class="action-card-btn" id="btn_card_retrieve" onclick="toggleRetrieveApplications()">
+                            <div class="action-card-icon">📋</div>
+                            <div class="action-card-title">Retrieve Application</div>
+                            <div class="action-card-desc">View and inspect your submitted applications, track review status, and view details.</div>
+                            <span class="btn-secondary" style="margin-top: auto; padding: 8px 14px; font-size: 0.85rem;">View Application List &darr;</span>
+                        </button>
+                    </div>
+
+                    <!-- Retrieved Application List Section -->
+                    <div id="retrieved_apps_panel">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                            <h3 style="font-size: 1.05rem; font-weight: 700;">Your Submitted Applications</h3>
+                            <button type="button" class="nav-link-btn" onclick="fetchUserApplications()" style="padding: 4px 10px; font-size: 0.78rem;">🔄 Refresh</button>
                         </div>
-                        <span id="mfa_code_hint" class="hint">8 characters: combination of lowercase letters (a-z) and digits (0-9).</span>
+                        <div id="apps_list_container">
+                            <p style="color: var(--text-muted); font-size: 0.88rem;">Loading your application records...</p>
+                        </div>
+
+                        <!-- Selected Application Details Box -->
+                        <div id="app_detail_card">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">
+                                <h4 style="font-size: 0.98rem; font-weight: 700; color: var(--primary);">Application Details: <span id="detail_app_id" style="font-family: monospace;"></span></h4>
+                                <button type="button" onclick="closeAppDetails()" style="background: none; border: none; font-size: 1.1rem; cursor: pointer; color: var(--text-muted);">✕</button>
+                            </div>
+                            <div id="app_detail_rows"></div>
+                            <div style="margin-top: 14px; display: flex; gap: 8px; justify-content: flex-end;">
+                                <button type="button" id="btn_open_app_readonly" class="btn-submit" style="width: auto; padding: 6px 14px; font-size: 0.82rem;" onclick="viewFullApplication()">
+                                    👁️ Open Full Application View
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="mfa-timer-row">
-                        <span>Code expires in: <strong id="mfa_countdown" style="color: var(--text-primary); font-family: monospace;">15:00</strong></span>
-                        <button type="button" id="btn_resend_mfa" class="btn-resend" onclick="resendMfaCode()">Resend Code</button>
+                    <div style="margin-top: 24px; text-align: center; border-top: 1px solid var(--border-color); padding-top: 16px;">
+                        <button type="button" class="btn-secondary" onclick="signOutCandidate()" style="font-size: 0.82rem;">
+                            🔒 Sign Out
+                        </button>
                     </div>
+                </section>
 
-                    <button type="submit" id="btn_verify_submit" class="btn-submit">
-                        <span id="verify_btn_text">Verify Code &amp; Complete Registration</span>
-                        <span id="verify_btn_spinner" style="display: none;">⏳</span>
-                    </button>
-                </form>
+            </div>
 
-                <div style="margin-top: 18px; text-align: center;">
-                    <button type="button" class="btn-secondary" onclick="returnToRegistration()" style="font-size: 0.82rem;">
-                        &larr; Back / Change Email
-                    </button>
-                </div>
-            </section>
+        </main>
 
-            <!-- 4. REGISTRATION SUCCESS SECTION -->
-            <section id="success_section" aria-labelledby="success_heading">
-                <div class="success-icon-badge">✓</div>
-                <h2 id="success_heading" class="card-title">Registration Verified!</h2>
-                <p class="card-desc">Your email has been authenticated via Multi-Factor Authentication.</p>
+        <!-- Footer -->
+        <footer class="portal-footer">
+            <div>Careers Portal &bull; Enterprise Candidate Authentication &bull; Published under <a href="LICENSE" target="_blank" rel="noopener">MIT License</a></div>
+            <div style="margin-top: 4px; color: var(--text-muted);">Dual-factor credential protection &bull; Free to use for personal and commercial applications</div>
+        </footer>
 
-                <div class="success-details">
-                    <div><strong>Registered Username:</strong> <span id="success_username">-</span></div>
-                    <div><strong>Verified Email:</strong> <span id="success_email">-</span></div>
-                    <div><strong>Security Status:</strong> <span style="color: var(--success); font-weight: 600;">MFA Verified</span></div>
-                    <div><strong>Verified At:</strong> <span id="success_timestamp">-</span></div>
-                </div>
-
-                <a id="btn_proceed_application" href="Application.html" class="btn-submit" style="text-decoration: none;">
-                    <span>Proceed to Job Application Form</span>
-                    <span>&rarr;</span>
-                </a>
-            </section>
-
-        </div>
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="portal-footer">
-        <div>Career Portal &bull; Enterprise Candidate Authentication &bull; Published under <a href="LICENSE" target="_blank" rel="noopener">MIT License</a></div>
-        <div style="margin-top: 4px; color: var(--text-muted);">Dual-factor credential protection &bull; Free to use for personal and commercial applications</div>
-    </footer>
+    </div>
 
     <!-- JavaScript Application Logic -->
     <script>
+        /* ========================================================== */
+        /* AUTH STATE & USER TRACKING                                 */
+        /* ========================================================== */
+        let activeAuthFlow = 'signin'; // 'signin' or 'signup'
+        let currentAuthData = {
+            username: '',
+            email: '',
+            password: '',
+            mfaCode: ''
+        };
+        let mfaTimerInterval = null;
+        let mfaSecondsRemaining = 900;
+        let userApplicationsCache = [];
+        let selectedApplicationId = null;
+
         /* ========================================================== */
         /* VIEW SWITCHING: SIGN IN vs SIGN UP                         */
         /* ========================================================== */
@@ -917,19 +1023,33 @@
             const signinSec = document.getElementById('signin_section');
             const signupSec = document.getElementById('signup_section');
             const mfaSec = document.getElementById('mfa_section');
-            const successSec = document.getElementById('success_section');
+            const dashSec = document.getElementById('candidate_dashboard_section');
+            const mainCard = document.getElementById('main_card');
 
             mfaSec.style.display = 'none';
-            successSec.style.display = 'none';
+            dashSec.style.display = 'none';
+            mainCard.classList.remove('dashboard-mode');
 
             if (view === 'signup') {
+                activeAuthFlow = 'signup';
                 signinSec.style.display = 'none';
                 signupSec.style.display = 'block';
                 document.getElementById('username').focus();
             } else {
+                activeAuthFlow = 'signin';
                 signupSec.style.display = 'none';
                 signinSec.style.display = 'block';
                 document.getElementById('signin_identifier').focus();
+            }
+        }
+
+        function returnToAuthView() {
+            clearInterval(mfaTimerInterval);
+            document.getElementById('mfa_section').style.display = 'none';
+            if (activeAuthFlow === 'signup') {
+                document.getElementById('signup_section').style.display = 'block';
+            } else {
+                document.getElementById('signin_section').style.display = 'block';
             }
         }
 
@@ -947,105 +1067,71 @@
             if (trimmed.length > 254) {
                 return { isValid: false, error: `Email length (${trimmed.length} chars) exceeds the 254-character deliverability limit.` };
             }
-
             const atIndex = trimmed.indexOf('@');
             const lastAtIndex = trimmed.lastIndexOf('@');
             if (atIndex === -1 || atIndex !== lastAtIndex) {
-                return { isValid: false, error: 'Email must contain exactly one "@" symbol separating local-part and domain.' };
+                return { isValid: false, error: 'Email must contain exactly one "@" separator.' };
             }
 
             const localPart = trimmed.substring(0, atIndex);
             const domainPart = trimmed.substring(atIndex + 1);
 
-            if (localPart.length === 0) {
-                return { isValid: false, error: 'Email local-part (before "@") cannot be empty.' };
+            if (localPart.length < 1 || localPart.length > 64) {
+                return { isValid: false, error: `Username/local-part (${localPart.length} chars) must be between 1 and 64 characters.` };
             }
-            if (localPart.length > 64) {
-                return { isValid: false, error: `Email local-part (${localPart.length} chars) exceeds the 64-character limit.` };
+            if (domainPart.length < 1 || domainPart.length > 255) {
+                return { isValid: false, error: `Domain name (${domainPart.length} chars) must be between 1 and 255 characters.` };
             }
-            if (localPart.startsWith('.') || localPart.endsWith('.')) {
-                return { isValid: false, error: 'Email local-part cannot begin or end with a period.' };
-            }
-            if (localPart.includes('..')) {
-                return { isValid: false, error: 'Email local-part cannot contain consecutive periods "..".' };
-            }
-            if (!/^[a-zA-Z0-9!#$%&'*+\/=?^_~|\x60{}-]+$/.test(localPart)) {
-                return { isValid: false, error: 'Email local-part contains disallowed characters.' };
+            if (localPart.startsWith('.') || localPart.endsWith('.') || localPart.includes('..')) {
+                return { isValid: false, error: 'Local-part cannot start, end with, or contain consecutive periods (RFC 5322).' };
             }
 
-            if (domainPart.length === 0) {
-                return { isValid: false, error: 'Email domain (after "@") cannot be empty.' };
+            const domainLabels = domainPart.split('.');
+            if (domainLabels.length < 2) {
+                return { isValid: false, error: 'Domain name must include a valid top-level domain (TLD).' };
             }
-            if (domainPart.length > 255) {
-                return { isValid: false, error: `Email domain (${domainPart.length} chars) exceeds the 255-character limit.` };
-            }
-            if (domainPart.startsWith('.') || domainPart.endsWith('.')) {
-                return { isValid: false, error: 'Email domain cannot begin or end with a period.' };
-            }
-            if (domainPart.includes('..')) {
-                return { isValid: false, error: 'Email domain cannot contain consecutive periods "..".' };
-            }
-
-            const labels = domainPart.split('.');
-            if (labels.length < 2) {
-                return { isValid: false, error: 'Email domain must contain a valid domain name and Top-Level Domain (e.g. example.com).' };
-            }
-
-            for (let i = 0; i < labels.length; i++) {
-                const label = labels[i];
-                if (label.length === 0) {
-                    return { isValid: false, error: 'Email domain contains an empty label.' };
-                }
-                if (label.length > 63) {
-                    return { isValid: false, error: `Domain label "${label}" (${label.length} chars) exceeds the 63-character limit.` };
+            for (let i = 0; i < domainLabels.length; i++) {
+                const label = domainLabels[i];
+                if (label.length < 1 || label.length > 63) {
+                    return { isValid: false, error: `Domain label "${label}" length (${label.length}) must be between 1 and 63 characters.` };
                 }
                 if (label.startsWith('-') || label.endsWith('-')) {
                     return { isValid: false, error: `Domain label "${label}" cannot begin or end with a hyphen.` };
                 }
-                if (!/^[a-zA-Z0-9-]+$/.test(label)) {
-                    return { isValid: false, error: `Domain label "${label}" contains disallowed characters.` };
-                }
             }
 
-            const tld = labels[labels.length - 1];
-            if (!/^[a-zA-Z]{2,63}$/.test(tld)) {
-                return { isValid: false, error: `Top-Level Domain ".${tld}" must consist of at least 2 alphabetic characters.` };
+            const rfcPattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+            if (!rfcPattern.test(trimmed)) {
+                return { isValid: false, error: 'Email contains characters or format outside RFC 5321/5322 standard specifications.' };
             }
-
             return { isValid: true, error: '' };
         }
 
         /* ========================================================== */
-        /* PASSWORD SECURITY POLICY & STRENGTH EVALUATION             */
+        /* PASSWORD POLICY & STRENGTH EVALUATION                      */
         /* ========================================================== */
         function validatePasswordPolicy(password) {
             if (!password) {
                 return { isValid: false, error: 'Password is required.' };
             }
-            if (password.length < 8) {
-                return { isValid: false, error: `Password is too short (${password.length}/8 characters minimum).` };
+            if (password.length < 8 || password.length > 64) {
+                return { isValid: false, error: `Password length (${password.length}) must be between 8 and 64 characters.` };
             }
-            if (password.length > 64) {
-                return { isValid: false, error: 'Password cannot exceed 64 characters.' };
-            }
-            // Strict allowed character set: A-Z, a-z, 0-9 and allowed special characters: @ $ ! % * ? & # ^ _ -
-            if (!/^[A-Za-z0-9@$!%*?&#^_\-]+$/.test(password)) {
-                return {
-                    isValid: false,
-                    error: 'Password contains disallowed characters. Only A-Z, a-z, 0-9 and allowed special characters (@ $ ! % * ? & # ^ _ -) are permitted.'
-                };
+            const allowedCharRegex = /^[A-Za-z0-9@$!%*?&#^_\-]+$/;
+            if (!allowedCharRegex.test(password)) {
+                return { isValid: false, error: 'Password contains disallowed characters. Only A-Z, a-z, 0-9 and allowed special characters (@ $ ! % * ? & # ^ _ -) are permitted.' };
             }
             if (!/[A-Z]/.test(password)) {
-                return { isValid: false, error: 'Password must contain at least one uppercase letter (A-Z).' };
+                return { isValid: false, error: 'Password must include at least one uppercase letter (A-Z).' };
             }
             if (!/[a-z]/.test(password)) {
-                return { isValid: false, error: 'Password must contain at least one lowercase letter (a-z).' };
+                return { isValid: false, error: 'Password must include at least one lowercase letter (a-z).' };
             }
             if (!/[0-9]/.test(password)) {
-                return { isValid: false, error: 'Password must contain at least one number (0-9).' };
+                return { isValid: false, error: 'Password must include at least one number (0-9).' };
             }
             if (!/[@$!%*?&#^_\-]/.test(password)) {
-                return { isValid: false, error: 'Password must contain at least one allowed special character (@ $ ! % * ? & # ^ _ -).' };
+                return { isValid: false, error: 'Password must include at least one allowed special character (@ $ ! % * ? & # ^ _ -).' };
             }
             return { isValid: true, error: '' };
         }
@@ -1057,7 +1143,6 @@
             if (!/^[A-Za-z0-9@$!%*?&#^_\-]+$/.test(password)) {
                 return { score: 0, label: 'Disallowed characters', color: '#ef4444', isDisallowed: true };
             }
-
             let score = 0;
             if (password.length >= 8) score++;
             if (/[A-Z]/.test(password) && /[a-z]/.test(password)) score++;
@@ -1080,25 +1165,19 @@
                 labelEl.textContent = label;
                 labelEl.style.color = color;
             }
-
             for (let i = 1; i <= 4; i++) {
                 const bar = document.getElementById(`pwd_bar_${i}`);
                 if (bar) {
                     bar.style.backgroundColor = (i <= score) ? color : 'var(--surface-subtle)';
                 }
             }
-
             const pwdInput = document.getElementById('password');
             if (pwdInput && password) {
                 if (isDisallowed) {
                     pwdInput.setCustomValidity('Password contains disallowed characters. Only A-Z, a-z, 0-9 and allowed special characters (@ $ ! % * ? & # ^ _ -) are permitted.');
                 } else {
                     const policy = validatePasswordPolicy(password);
-                    if (!policy.isValid) {
-                        pwdInput.setCustomValidity(policy.error);
-                    } else {
-                        pwdInput.setCustomValidity('');
-                    }
+                    pwdInput.setCustomValidity(policy.isValid ? '' : policy.error);
                 }
             }
         }
@@ -1114,18 +1193,6 @@
                 btn.textContent = '👁️';
             }
         }
-
-        /* ========================================================== */
-        /* REGISTRATION & MFA FLOW MANAGEMENT                         */
-        /* ========================================================== */
-        let currentRegistrationData = {
-            username: '',
-            email: '',
-            password: '',
-            mfaCode: ''
-        };
-        let mfaTimerInterval = null;
-        let mfaSecondsRemaining = 900; // 15 minutes
 
         function showAlert(elementId, message, type = 'error') {
             const box = document.getElementById(elementId);
@@ -1143,89 +1210,77 @@
             box.style.display = 'none';
         }
 
-        // Sign Up Listeners
+        /* Input Listeners for Sign Up */
         const usernameInput = document.getElementById('username');
         const usernameCounter = document.getElementById('username_counter');
         const usernameHint = document.getElementById('username_hint');
-
-        usernameInput.addEventListener('input', () => {
-            const val = usernameInput.value;
-            usernameCounter.textContent = `${val.length}/30`;
-            if (val.length > 0 && !/^[a-zA-Z0-9_.-]+$/.test(val)) {
-                usernameInput.setCustomValidity('Only alphanumeric characters, periods, hyphens, and underscores are permitted.');
-                usernameHint.textContent = '❌ Invalid characters detected in username.';
-                usernameHint.className = 'hint error';
-            } else if (val.length > 0 && val.length < 4) {
-                usernameInput.setCustomValidity('Username must be at least 4 characters long.');
-                usernameHint.textContent = '❌ Minimum 4 characters required.';
-                usernameHint.className = 'hint error';
-            } else {
-                usernameInput.setCustomValidity('');
-                usernameHint.textContent = '4-30 characters: letters, numbers, hyphens, periods, or underscores.';
-                usernameHint.className = 'hint';
-            }
-        });
+        if (usernameInput) {
+            usernameInput.addEventListener('input', () => {
+                const len = usernameInput.value.length;
+                usernameCounter.textContent = `${len}/30`;
+                if (!usernameInput.value) {
+                    usernameHint.style.color = 'var(--text-muted)';
+                    usernameHint.textContent = '4-30 characters: letters, numbers, hyphens, periods, or underscores.';
+                } else if (len < 4 || len > 30 || !/^[a-zA-Z0-9_.-]+$/.test(usernameInput.value)) {
+                    usernameHint.style.color = 'var(--danger)';
+                    usernameHint.textContent = 'Invalid: Must be 4-30 characters (letters, numbers, hyphens, periods, underscores).';
+                } else {
+                    usernameHint.style.color = 'var(--success)';
+                    usernameHint.textContent = '✓ Username is valid format.';
+                }
+            });
+        }
 
         const emailInput = document.getElementById('email');
         const emailCounter = document.getElementById('email_counter');
         const emailHint = document.getElementById('email_hint');
-
-        emailInput.addEventListener('input', () => {
-            const val = emailInput.value.trim();
-            emailCounter.textContent = `${val.length}/254`;
-            if (!val) {
-                emailInput.setCustomValidity('');
-                emailHint.textContent = '';
-                emailHint.className = 'hint';
-                return;
-            }
-            const res = validateRfcEmail(val);
-            if (!res.isValid) {
-                emailInput.setCustomValidity(res.error);
-                emailHint.textContent = '❌ ' + res.error;
-                emailHint.className = 'hint error';
-            } else {
-                emailInput.setCustomValidity('');
-                emailHint.textContent = '✓ Valid email address.';
-                emailHint.className = 'hint success';
-            }
-        });
+        if (emailInput) {
+            emailInput.addEventListener('input', () => {
+                const len = emailInput.value.length;
+                emailCounter.textContent = `${len}/254`;
+                if (!emailInput.value) {
+                    emailHint.textContent = '';
+                } else {
+                    const check = validateRfcEmail(emailInput.value);
+                    if (!check.isValid) {
+                        emailHint.style.color = 'var(--danger)';
+                        emailHint.textContent = check.error;
+                    } else {
+                        emailHint.style.color = 'var(--success)';
+                        emailHint.textContent = '✓ Email address is valid.';
+                    }
+                }
+            });
+        }
 
         const pwdInput = document.getElementById('password');
         const pwdCounter = document.getElementById('password_counter');
+        if (pwdInput) {
+            pwdInput.addEventListener('input', () => {
+                pwdCounter.textContent = `${pwdInput.value.length}/64`;
+                updatePasswordStrengthUI(pwdInput.value);
+            });
+        }
+
         const confirmPwdInput = document.getElementById('confirm_password');
         const confirmPwdHint = document.getElementById('confirm_password_hint');
-
-        pwdInput.addEventListener('input', () => {
-            pwdCounter.textContent = `${pwdInput.value.length}/64`;
-            updatePasswordStrengthUI(pwdInput.value);
-            if (confirmPwdInput.value) {
-                if (pwdInput.value !== confirmPwdInput.value) {
-                    confirmPwdInput.setCustomValidity('Passwords do not match.');
-                    confirmPwdHint.textContent = '❌ Passwords do not match.';
-                    confirmPwdHint.className = 'hint error';
+        if (confirmPwdInput) {
+            confirmPwdInput.addEventListener('input', () => {
+                if (!confirmPwdInput.value) {
+                    confirmPwdHint.style.color = 'var(--text-muted)';
+                    confirmPwdHint.textContent = 'Must match password exactly.';
+                } else if (confirmPwdInput.value !== pwdInput.value) {
+                    confirmPwdHint.style.color = 'var(--danger)';
+                    confirmPwdHint.textContent = 'Passwords do not match.';
                 } else {
-                    confirmPwdInput.setCustomValidity('');
+                    confirmPwdHint.style.color = 'var(--success)';
                     confirmPwdHint.textContent = '✓ Passwords match.';
-                    confirmPwdHint.className = 'hint success';
                 }
-            }
-        });
-
-        confirmPwdInput.addEventListener('input', () => {
-            if (pwdInput.value !== confirmPwdInput.value) {
-                confirmPwdInput.setCustomValidity('Passwords do not match.');
-                confirmPwdHint.textContent = '❌ Passwords do not match.';
-                confirmPwdHint.className = 'hint error';
-            } else {
-                confirmPwdInput.setCustomValidity('');
-                confirmPwdHint.textContent = '✓ Passwords match.';
-                confirmPwdHint.className = 'hint success';
-            }
-        });
+            });
+        }
 
         /* ========================================================== */
-        /* SIGN IN SUBMISSION (Existing Users)                        */
+        /* SIGN IN SUBMISSION (Triggers MFA Before Access)             */
         /* ========================================================== */
         document.getElementById('signin_form').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -1249,8 +1304,10 @@
             const btnText = document.getElementById('signin_btn_text');
             const btnSpinner = document.getElementById('signin_btn_spinner');
             signinBtn.disabled = true;
-            btnText.textContent = 'Signing in...';
+            btnText.textContent = 'Authenticating...';
             btnSpinner.style.display = 'inline-block';
+
+            activeAuthFlow = 'signin';
 
             try {
                 const res = await fetch('/api/login', {
@@ -1264,29 +1321,29 @@
                     throw new Error(data.error || 'Sign in failed. Please check your credentials.');
                 }
 
-                // Store verified session and redirect to Application.html
-                try {
-                    localStorage.setItem('career_portal_verified_user', JSON.stringify({
-                        username: data.username || identifier,
-                        email: data.email || identifier,
-                        signedInAt: new Date().toISOString()
-                    }));
-                } catch (err) {}
+                currentAuthData = {
+                    username: data.username || identifier,
+                    email: data.email || (identifier.includes('@') ? identifier : `${identifier}@example.com`),
+                    password: password,
+                    mfaCode: data.code || ''
+                };
 
-                window.location.href = data.redirectUrl || 'Application.html';
+                revealMfaSection(currentAuthData.email, data.code, 'Sign-In MFA Verification');
+
             } catch (err) {
-                // Client-side fallback if server offline
-                try {
-                    localStorage.setItem('career_portal_verified_user', JSON.stringify({
-                        username: identifier,
-                        email: identifier.includes('@') ? identifier : `${identifier}@example.com`,
-                        signedInAt: new Date().toISOString()
-                    }));
-                } catch (e) {}
-                window.location.href = `Application.html?auth=true&email=${encodeURIComponent(identifier)}`;
+                // Client-side fallback if server is offline
+                const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+                let simulatedCode = "";
+                for (let i = 0; i < 8; i++) {
+                    simulatedCode += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                const email = identifier.includes('@') ? identifier : `${identifier}@example.com`;
+                const username = identifier.includes('@') ? identifier.split('@')[0] : identifier;
+                currentAuthData = { username, email, password, mfaCode: simulatedCode };
+                revealMfaSection(email, simulatedCode, 'Sign-In MFA Verification');
             } finally {
                 signinBtn.disabled = false;
-                btnText.textContent = 'Sign In';
+                btnText.textContent = 'Sign In & Verify';
                 btnSpinner.style.display = 'none';
             }
         });
@@ -1341,7 +1398,8 @@
             btnText.textContent = 'Sending Verification Code...';
             btnSpinner.style.display = 'inline-block';
 
-            currentRegistrationData = { username, email, password, mfaCode: '' };
+            activeAuthFlow = 'signup';
+            currentAuthData = { username, email, password, mfaCode: '' };
 
             try {
                 const res = await fetch('/api/register', {
@@ -1355,17 +1413,16 @@
                     throw new Error(data.error || 'Registration failed. Please check your inputs.');
                 }
 
-                currentRegistrationData.mfaCode = data.code || '';
-                revealMfaSection(email, data.code);
+                currentAuthData.mfaCode = data.code || '';
+                revealMfaSection(email, data.code, 'Registration Security Verification');
             } catch (err) {
-                // Offline fallback code generator (a-z, 0-9, no A-Z)
                 const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
                 let simulatedCode = "";
                 for (let i = 0; i < 8; i++) {
                     simulatedCode += chars.charAt(Math.floor(Math.random() * chars.length));
                 }
-                currentRegistrationData.mfaCode = simulatedCode;
-                revealMfaSection(email, simulatedCode);
+                currentAuthData.mfaCode = simulatedCode;
+                revealMfaSection(email, simulatedCode, 'Registration Security Verification');
             } finally {
                 submitBtn.disabled = false;
                 btnText.textContent = 'Sign Up & Send Verification Code';
@@ -1376,29 +1433,26 @@
         /* ========================================================== */
         /* MFA CODE SCREEN & 8-SLOT AUTO-ADVANCE INPUTS               */
         /* ========================================================== */
-        function revealMfaSection(email, code) {
+        function revealMfaSection(email, code, badgeLabel = 'MFA Verification') {
             document.getElementById('signin_section').style.display = 'none';
             document.getElementById('signup_section').style.display = 'none';
+            document.getElementById('candidate_dashboard_section').style.display = 'none';
+            document.getElementById('main_card').classList.remove('dashboard-mode');
+
             document.getElementById('mfa_section').style.display = 'block';
+            document.getElementById('mfa_badge_text').textContent = badgeLabel;
             document.getElementById('mfa_target_email').textContent = email;
             document.getElementById('simulated_mfa_code').textContent = code || '--------';
             document.getElementById('simulated_email_time').textContent = new Date().toLocaleTimeString();
 
             clearAlert('mfa_alert');
             resetMfaSlots();
-            startMfaCountdown(900); // 15 minutes
+            startMfaCountdown(900);
 
             setTimeout(() => {
                 const firstSlot = document.getElementById('slot_1');
                 if (firstSlot) firstSlot.focus();
             }, 100);
-        }
-
-        function returnToRegistration() {
-            clearInterval(mfaTimerInterval);
-            document.getElementById('mfa_section').style.display = 'none';
-            document.getElementById('signup_section').style.display = 'block';
-            clearAlert('register_alert');
         }
 
         function resetMfaSlots() {
@@ -1414,12 +1468,10 @@
         // Setup 8-Slot Inputs for a-z, 0-9 (no A-Z)
         const slotInputs = Array.from(document.querySelectorAll('.mfa-slot-input'));
         slotInputs.forEach((slot, index) => {
-            slot.addEventListener('input', (e) => {
-                // Force lowercase: combination of a-z, 0-9
+            slot.addEventListener('input', () => {
                 let val = slot.value.toLowerCase();
                 slot.value = val;
                 if (val.length > 0) {
-                    // Only accept a-z, 0-9
                     if (!/^[a-z0-9]$/.test(val)) {
                         slot.value = '';
                         return;
@@ -1471,14 +1523,14 @@
         }
 
         function autoFillMfaCode() {
-            const code = currentRegistrationData.mfaCode.toLowerCase();
+            const code = currentAuthData.mfaCode.toLowerCase();
             if (!code || code.length !== 8) return;
             for (let i = 0; i < 8; i++) {
                 slotInputs[i].value = code[i];
                 slotInputs[i].classList.add('filled');
             }
             slotInputs[7].focus();
-            showAlert('mfa_alert', `Code "${code}" auto-filled from email! Click Verify to finish.`, 'success');
+            showAlert('mfa_alert', `Code "${code}" auto-filled from email! Click Verify to continue.`, 'success');
         }
 
         function startMfaCountdown(seconds) {
@@ -1518,22 +1570,23 @@
             resendBtn.disabled = true;
             resendBtn.textContent = 'Sending...';
 
+            const endpoint = (activeAuthFlow === 'signin') ? '/api/login' : '/api/send-mfa';
+            const payload = (activeAuthFlow === 'signin') 
+                ? { identifier: currentAuthData.email, password: currentAuthData.password }
+                : { username: currentAuthData.username, email: currentAuthData.email, password: currentAuthData.password };
+
             try {
-                const res = await fetch('/api/send-mfa', {
+                const res = await fetch(endpoint, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        username: currentRegistrationData.username,
-                        email: currentRegistrationData.email,
-                        password: currentRegistrationData.password
-                    })
+                    body: JSON.stringify(payload)
                 });
                 const data = await res.json();
                 if (res.ok && data.code) {
-                    currentRegistrationData.mfaCode = data.code;
+                    currentAuthData.mfaCode = data.code;
                     document.getElementById('simulated_mfa_code').textContent = data.code;
                     document.getElementById('simulated_email_time').textContent = new Date().toLocaleTimeString();
-                    showAlert('mfa_alert', `New 8-character verification code dispatched to ${currentRegistrationData.email}!`, 'success');
+                    showAlert('mfa_alert', `New 8-character verification code dispatched to ${currentAuthData.email}!`, 'success');
                 } else {
                     throw new Error(data.error || 'Failed to resend code');
                 }
@@ -1543,10 +1596,10 @@
                 for (let i = 0; i < 8; i++) {
                     newCode += chars.charAt(Math.floor(Math.random() * chars.length));
                 }
-                currentRegistrationData.mfaCode = newCode;
+                currentAuthData.mfaCode = newCode;
                 document.getElementById('simulated_mfa_code').textContent = newCode;
                 document.getElementById('simulated_email_time').textContent = new Date().toLocaleTimeString();
-                showAlert('mfa_alert', `New verification code dispatched to ${currentRegistrationData.email}!`, 'success');
+                showAlert('mfa_alert', `New verification code dispatched to ${currentAuthData.email}!`, 'success');
             }
 
             resetMfaSlots();
@@ -1579,7 +1632,7 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        email: currentRegistrationData.email,
+                        email: currentAuthData.email,
                         code: enteredCode
                     })
                 });
@@ -1590,34 +1643,44 @@
                 }
 
                 clearInterval(mfaTimerInterval);
-                revealSuccessSection(currentRegistrationData.username, currentRegistrationData.email, data.redirectUrl);
+                enterCandidateDashboard(currentAuthData.username, currentAuthData.email);
 
             } catch (err) {
-                if (enteredCode.toLowerCase() === currentRegistrationData.mfaCode.toLowerCase()) {
+                if (enteredCode.toLowerCase() === currentAuthData.mfaCode.toLowerCase()) {
                     clearInterval(mfaTimerInterval);
-                    revealSuccessSection(currentRegistrationData.username, currentRegistrationData.email, `Application.html?verified=true&email=${encodeURIComponent(currentRegistrationData.email)}&username=${encodeURIComponent(currentRegistrationData.username)}`);
+                    enterCandidateDashboard(currentAuthData.username, currentAuthData.email);
                 } else {
                     showAlert('mfa_alert', err.message || 'Invalid verification code. Please check the 8-character code sent to your email.');
                     slotInputs.forEach(s => s.classList.add('error'));
                 }
             } finally {
                 verifyBtn.disabled = false;
-                btnText.textContent = 'Verify Code & Complete Registration';
+                btnText.textContent = 'Verify Code & Continue';
                 btnSpinner.style.display = 'none';
             }
         });
 
-        function revealSuccessSection(username, email, redirectUrl) {
+        /* ========================================================== */
+        /* CANDIDATE DASHBOARD (HOME SCREEN: APPLY & RETRIEVE)        */
+        /* ========================================================== */
+        function enterCandidateDashboard(username, email) {
+            document.getElementById('signin_section').style.display = 'none';
+            document.getElementById('signup_section').style.display = 'none';
             document.getElementById('mfa_section').style.display = 'none';
-            document.getElementById('success_section').style.display = 'block';
+            
+            const dashSec = document.getElementById('candidate_dashboard_section');
+            dashSec.style.display = 'block';
 
-            document.getElementById('success_username').textContent = username;
-            document.getElementById('success_email').textContent = email;
-            document.getElementById('success_timestamp').textContent = new Date().toLocaleString();
+            const mainCard = document.getElementById('main_card');
+            mainCard.classList.add('dashboard-mode');
 
-            const proceedBtn = document.getElementById('btn_proceed_application');
-            if (proceedBtn && redirectUrl) {
-                proceedBtn.href = redirectUrl;
+            document.getElementById('dashboard_username').textContent = username || 'Candidate';
+            document.getElementById('dashboard_email').textContent = email || 'user@example.com';
+
+            const navBadge = document.getElementById('nav_user_badge');
+            if (navBadge) {
+                navBadge.textContent = `👤 ${username || email}`;
+                navBadge.style.display = 'inline-block';
             }
 
             try {
@@ -1627,10 +1690,215 @@
                     verifiedAt: new Date().toISOString()
                 }));
             } catch (e) {}
+
+            // Pre-fetch candidate applications
+            fetchUserApplications(email);
+        }
+
+        function proceedToApply() {
+            const user = getSavedVerifiedUser() || currentAuthData;
+            const targetUrl = `Application.html?auth=true&verified=true&email=${encodeURIComponent(user.email || '')}&username=${encodeURIComponent(user.username || '')}`;
+            window.location.href = targetUrl;
+        }
+
+        function toggleRetrieveApplications() {
+            const panel = document.getElementById('retrieved_apps_panel');
+            const btn = document.getElementById('btn_card_retrieve');
+            if (panel.style.display === 'block') {
+                panel.style.display = 'none';
+                btn.classList.remove('active');
+            } else {
+                panel.style.display = 'block';
+                btn.classList.add('active');
+                const user = getSavedVerifiedUser() || currentAuthData;
+                fetchUserApplications(user.email);
+            }
+        }
+
+        async function fetchUserApplications(emailParam) {
+            const user = getSavedVerifiedUser() || currentAuthData;
+            const email = (emailParam || user.email || '').toLowerCase();
+            const container = document.getElementById('apps_list_container');
+            container.innerHTML = '<p style="color: var(--text-muted); font-size: 0.88rem;">Retrieving your submitted applications...</p>';
+
+            try {
+                // Query server for submitted applications
+                const res = await fetch(`/api/user-applications?email=${encodeURIComponent(email)}`);
+                let apps = [];
+                if (res.ok) {
+                    apps = await res.json();
+                }
+
+                // Also check localStorage for local drafts/submissions
+                let localApps = [];
+                try {
+                    const localStore = localStorage.getItem('career_portal_all_applications');
+                    if (localStore) {
+                        const parsed = JSON.parse(localStore);
+                        localApps = Array.isArray(parsed) ? parsed : Object.values(parsed);
+                    }
+                } catch (e) {}
+
+                // Merge unique applications by appId
+                const map = new Map();
+                apps.forEach(a => { if (a && a.appId) map.set(a.appId, a); });
+                localApps.forEach(a => {
+                    if (a && a.appId) {
+                        if (!map.has(a.appId) && (!email || (a.email && a.email.toLowerCase() === email))) {
+                            map.set(a.appId, a);
+                        }
+                    }
+                });
+
+                userApplicationsCache = Array.from(map.values());
+                renderApplicationsList(userApplicationsCache);
+            } catch (err) {
+                // Fallback to localStorage records
+                let fallback = [];
+                try {
+                    const localStore = localStorage.getItem('career_portal_all_applications');
+                    if (localStore) {
+                        const parsed = JSON.parse(localStore);
+                        fallback = Array.isArray(parsed) ? parsed : Object.values(parsed);
+                    }
+                } catch (e) {}
+                userApplicationsCache = fallback;
+                renderApplicationsList(userApplicationsCache);
+            }
+        }
+
+        function renderApplicationsList(apps) {
+            const container = document.getElementById('apps_list_container');
+            if (!apps || apps.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 20px 10px; background: var(--surface-subtle); border-radius: 8px;">
+                        <span style="font-size: 1.8rem; display: block; margin-bottom: 6px;">📂</span>
+                        <div style="font-weight: 700; margin-bottom: 4px;">No submitted applications found</div>
+                        <p style="font-size: 0.82rem; color: var(--text-muted);">You have not submitted any applications under this email address yet.</p>
+                        <button type="button" class="btn-submit" onclick="proceedToApply()" style="width: auto; margin: 12px auto 0 auto; padding: 6px 14px; font-size: 0.82rem;">
+                            Start First Application &rarr;
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            apps.forEach(app => {
+                const statusClass = (app.status === 'submitted') ? 'badge-submitted' : 'badge-draft';
+                const statusLabel = app.status || 'draft';
+                const dateDisplay = app.submittedAt ? new Date(app.submittedAt).toLocaleDateString() : (app.lastUpdated ? new Date(app.lastUpdated).toLocaleDateString() : 'Recent');
+                const roleDisplay = app.primaryRole || 'Job Application';
+
+                html += `
+                    <div class="app-list-item" onclick="selectApplicationNumber('${escapeHtml(app.appId)}')">
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 2px;">
+                                <strong style="font-family: monospace; font-size: 0.95rem; color: var(--primary);">#${escapeHtml(app.appId)}</strong>
+                                <span class="badge-status ${statusClass}">${escapeHtml(statusLabel)}</span>
+                            </div>
+                            <div style="font-size: 0.82rem; color: var(--text-muted);">${escapeHtml(roleDisplay)} &bull; ${escapeHtml(dateDisplay)}</div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 0.82rem; font-weight: 700; color: var(--primary);">View Details &rarr;</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        async function selectApplicationNumber(appId) {
+            selectedApplicationId = appId;
+            const detailCard = document.getElementById('app_detail_card');
+            const detailAppId = document.getElementById('detail_app_id');
+            const rowsContainer = document.getElementById('app_detail_rows');
+
+            detailAppId.textContent = appId;
+            detailCard.style.display = 'block';
+            rowsContainer.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">Loading application details...</p>';
+
+            // Find in cache or fetch from API
+            let app = userApplicationsCache.find(a => a.appId === appId);
+            if (!app || !app.fullName) {
+                try {
+                    const res = await fetch(`/api/application/${encodeURIComponent(appId)}`);
+                    if (res.ok) {
+                        app = await res.json();
+                    }
+                } catch (e) {}
+            }
+
+            if (!app) {
+                rowsContainer.innerHTML = '<p style="color: var(--danger); font-size: 0.85rem;">Could not load details for this application number.</p>';
+                return;
+            }
+
+            const rows = [
+                { label: 'Application Reference ID', val: app.appId },
+                { label: 'Applicant Name', val: app.fullName || '(Not specified)' },
+                { label: 'Email Address', val: app.email || currentAuthData.email },
+                { label: 'Contact Phone', val: app.phone || '(Not specified)' },
+                { label: 'Primary Job Role', val: app.primaryRole || 'Candidate Application' },
+                { label: 'Application Status', val: (app.status || 'draft').toUpperCase() },
+                { label: 'Submitted Date', val: app.submittedAt ? new Date(app.submittedAt).toLocaleString() : 'Draft' },
+                { label: 'Attached Resume', val: app.resumeName || '(None)' }
+            ];
+
+            let rowsHtml = '';
+            rows.forEach(r => {
+                rowsHtml += `
+                    <div class="detail-row">
+                        <span class="detail-label">${escapeHtml(r.label)}:</span>
+                        <span class="detail-val">${escapeHtml(String(r.val))}</span>
+                    </div>
+                `;
+            });
+
+            rowsContainer.innerHTML = rowsHtml;
+        }
+
+        function closeAppDetails() {
+            document.getElementById('app_detail_card').style.display = 'none';
+            selectedApplicationId = null;
+        }
+
+        function viewFullApplication() {
+            if (!selectedApplicationId) return;
+            window.location.href = `Application.html?loadAppId=${encodeURIComponent(selectedApplicationId)}&readonly=true`;
+        }
+
+        function signOutCandidate() {
+            try {
+                localStorage.removeItem('career_portal_verified_user');
+            } catch (e) {}
+            currentAuthData = { username: '', email: '', password: '', mfaCode: '' };
+            const navBadge = document.getElementById('nav_user_badge');
+            if (navBadge) navBadge.style.display = 'none';
+            document.getElementById('candidate_dashboard_section').style.display = 'none';
+            document.getElementById('main_card').classList.remove('dashboard-mode');
+            switchAuthView('signin');
+        }
+
+        function getSavedVerifiedUser() {
+            try {
+                const item = localStorage.getItem('career_portal_verified_user');
+                return item ? JSON.parse(item) : null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/[&<>"']/g, function(m) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+            });
         }
 
         /* ========================================================== */
-        /* THEME MANAGEMENT & CSRF INITIALIZATION                     */
+        /* THEME MANAGEMENT & INITIALIZATION                          */
         /* ========================================================== */
         function initTheme() {
             const saved = localStorage.getItem('career_portal_theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
@@ -1640,8 +1908,12 @@
 
         function updateThemeIcon(theme) {
             const icon = document.getElementById('theme_icon');
+            const text = document.getElementById('theme_text');
             if (icon) {
                 icon.textContent = (theme === 'dark') ? '☀️' : '🌙';
+            }
+            if (text) {
+                text.textContent = (theme === 'dark') ? 'Light' : 'Dark';
             }
         }
 
@@ -1658,6 +1930,19 @@
             const csrfInput = document.getElementById('csrf_token');
             if (csrfInput && window.crypto && window.crypto.randomUUID) {
                 csrfInput.value = window.crypto.randomUUID();
+            }
+
+            // Check if user is already verified from active session or URL params
+            const urlParams = new URLSearchParams(window.location.search);
+            const viewParam = urlParams.get('view');
+            const savedUser = getSavedVerifiedUser();
+
+            if (urlParams.get('logout') === 'true') {
+                signOutCandidate();
+            } else if (viewParam === 'signup') {
+                switchAuthView('signup');
+            } else if (savedUser && savedUser.email && (urlParams.get('dashboard') === 'true' || urlParams.get('verified') === 'true')) {
+                enterCandidateDashboard(savedUser.username, savedUser.email);
             }
         });
     </script>

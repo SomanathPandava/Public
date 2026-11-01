@@ -242,8 +242,9 @@ try {
                 $bytes = [System.Text.Encoding]::UTF8.GetBytes(($respObj | ConvertTo-Json))
                 $response.OutputStream.Write($bytes, 0, $bytes.Length)
             } catch {
+                Write-Host "[ERROR] /api/login failed: $($_.Exception.ToString())" -ForegroundColor Red
                 $response.StatusCode = 500
-                $bytes = [System.Text.Encoding]::UTF8.GetBytes(('{"error": "' + $_.Exception.Message + '"}'))
+                $bytes = [System.Text.Encoding]::UTF8.GetBytes(('{"error": "' + $_.Exception.Message.Replace('"', '\"') + '"}'))
                 $response.OutputStream.Write($bytes, 0, $bytes.Length)
             }
             SafeCloseResponse($response)
@@ -327,20 +328,65 @@ try {
                     $matchedUsername = if ($identifier -match '@') { $identifier.Split('@')[0] } else { $identifier }
                 }
 
-                Write-Host "[SIGN IN SUCCESS] User $matchedUsername ($matchedEmail) signed in." -ForegroundColor Green
+                # Generate 8-character MFA verification code (a-z, 0-9, no A-Z)
+                $chars = "abcdefghijklmnopqrstuvwxyz0123456789".ToCharArray()
+                $rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+                $randomBytes = New-Object byte[] 8
+                $rng.GetBytes($randomBytes)
+                $code = -join ($randomBytes | ForEach-Object { $chars[$_ % $chars.Length] })
+
+                # Save MFA challenge in server memory (valid for 15 minutes)
+                $challenge = [PSCustomObject]@{
+                    username = $matchedUsername
+                    email = $matchedEmail
+                    code = $code
+                    createdAt = (Get-Date).ToString("o")
+                    expiresAt = (Get-Date).AddMinutes(15).ToString("o")
+                    verified = $false
+                    purpose = "login"
+                }
+                $global:mfaStore[$matchedEmail.ToLower()] = $challenge
+
+                # Console audit log
+                Write-Host "==========================================================" -ForegroundColor Cyan
+                Write-Host "[MFA SIGN-IN CHALLENGE] User: $matchedUsername ($matchedEmail)" -ForegroundColor Green
+                Write-Host "Verification Code: $code (Combination of a-z, 0-9)" -ForegroundColor Yellow
+                Write-Host "Expires In: 15 minutes" -ForegroundColor Gray
+                Write-Host "==========================================================" -ForegroundColor Cyan
+
+                # Append to mfa_emails.json log for inspection
+                $emailEntry = [PSCustomObject]@{
+                    id = [System.Guid]::NewGuid().ToString()
+                    to = $matchedEmail
+                    username = $matchedUsername
+                    code = $code
+                    timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+                    status = "Dispatched (Sign-In MFA)"
+                }
+                $existingEmails = @()
+                if (Test-Path $mfaLogPath) {
+                    try { $existingEmails = Get-Content $mfaLogPath -Raw | ConvertFrom-Json } catch { $existingEmails = @() }
+                }
+                $updatedEmails = @($emailEntry) + @($existingEmails | Select-Object -First 49)
+                $updatedEmails | ConvertTo-Json -Depth 4 | Set-Content $mfaLogPath -Encoding UTF8
+
+                Write-Host "[SIGN IN MFA TRIGGERED] Code dispatched to $matchedEmail for $matchedUsername" -ForegroundColor Green
                 $response.ContentType = "application/json; charset=utf-8"
                 $respObj = [PSCustomObject]@{
                     success = $true
-                    message = "Sign in successful."
+                    mfaRequired = $true
+                    message = "Sign-in credentials verified. 8-character verification code dispatched to $matchedEmail."
                     username = $matchedUsername
                     email = $matchedEmail
-                    redirectUrl = "Application.html?auth=true&email=" + [System.Uri]::EscapeDataString($matchedEmail) + "&username=" + [System.Uri]::EscapeDataString($matchedUsername)
+                    code = $code
+                    expiresInSeconds = 900
                 }
                 $bytes = [System.Text.Encoding]::UTF8.GetBytes(($respObj | ConvertTo-Json))
                 $response.OutputStream.Write($bytes, 0, $bytes.Length)
             } catch {
+                Write-Host "[ERROR] /api/login failed: $($_.Exception.ToString())" -ForegroundColor Red
                 $response.StatusCode = 500
-                $bytes = [System.Text.Encoding]::UTF8.GetBytes(('{"error": "' + $_.Exception.Message + '"}'))
+                $bytes = [System.Text.Encoding]::UTF8.GetBytes(('{"error": "' + $_.Exception.Message.Replace('"', '\"') + '"}'))
                 $response.OutputStream.Write($bytes, 0, $bytes.Length)
             }
             SafeCloseResponse($response)
@@ -595,7 +641,7 @@ try {
             continue
         }
 
-        # API: Get Index
+        # API: Get Index / Applications
         if ($httpMethod -eq "GET" -and $urlPath -eq "/api/index") {
             if (Test-Path $indexFilePath) {
                 $response.ContentType = "application/json; charset=utf-8"
@@ -603,6 +649,66 @@ try {
                 $response.OutputStream.Write($bytes, 0, $bytes.Length)
             } else {
                 $response.StatusCode = 404
+            }
+            SafeCloseResponse($response)
+            continue
+        }
+
+        # API: Get Applications by User Email or Username
+        if ($httpMethod -eq "GET" -and ($urlPath -eq "/api/user-applications" -or $urlPath -eq "/api/my-applications")) {
+            try {
+                $qEmail = if ($request.QueryString["email"]) { $request.QueryString["email"].Trim().ToLower() } else { "" }
+                $qUser = if ($request.QueryString["username"]) { $request.QueryString["username"].Trim().ToLower() } else { "" }
+
+                $results = @()
+                if (Test-Path $indexFilePath) {
+                    $idxContent = [System.IO.File]::ReadAllText($indexFilePath, [System.Text.Encoding]::UTF8)
+                    $idxObj = $idxContent | ConvertFrom-Json
+                    if ($idxObj.applications) {
+                        foreach ($app in $idxObj.applications) {
+                            $match = $false
+                            if ($qEmail -and $app.email -and $app.email.ToLower() -eq $qEmail) { $match = $true }
+                            if ($qUser -and $app.username -and $app.username.ToLower() -eq $qUser) { $match = $true }
+                            if ($match) {
+                                $results += $app
+                            }
+                        }
+                    }
+                }
+
+                $response.ContentType = "application/json; charset=utf-8"
+                $respBytes = [System.Text.Encoding]::UTF8.GetBytes(($results | ConvertTo-Json -Depth 5))
+                $response.OutputStream.Write($respBytes, 0, $respBytes.Length)
+            } catch {
+                Write-Host "[ERROR] /api/login failed: $($_.Exception.ToString())" -ForegroundColor Red
+                $response.StatusCode = 500
+                $bytes = [System.Text.Encoding]::UTF8.GetBytes(('{"error": "' + $_.Exception.Message.Replace('"', '\"') + '"}'))
+                $response.OutputStream.Write($bytes, 0, $bytes.Length)
+            }
+            SafeCloseResponse($response)
+            continue
+        }
+
+        # API: Get Single Application Details by ID
+        if ($httpMethod -eq "GET" -and $urlPath.StartsWith("/api/application/")) {
+            try {
+                $appId = $urlPath.Substring("/api/application/".Length).Trim()
+                $appId = [regex]::Replace($appId, '[^a-zA-Z0-9_-]', '')
+                $targetFile = Join-Path $jobAppsDir "$appId.json"
+                if (Test-Path $targetFile) {
+                    $response.ContentType = "application/json; charset=utf-8"
+                    $bytes = [System.IO.File]::ReadAllBytes($targetFile)
+                    $response.OutputStream.Write($bytes, 0, $bytes.Length)
+                } else {
+                    $response.StatusCode = 404
+                    $bytes = [System.Text.Encoding]::UTF8.GetBytes('{"error": "Application not found"}')
+                    $response.OutputStream.Write($bytes, 0, $bytes.Length)
+                }
+            } catch {
+                Write-Host "[ERROR] /api/login failed: $($_.Exception.ToString())" -ForegroundColor Red
+                $response.StatusCode = 500
+                $bytes = [System.Text.Encoding]::UTF8.GetBytes(('{"error": "' + $_.Exception.Message.Replace('"', '\"') + '"}'))
+                $response.OutputStream.Write($bytes, 0, $bytes.Length)
             }
             SafeCloseResponse($response)
             continue

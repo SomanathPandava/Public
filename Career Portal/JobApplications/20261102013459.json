@@ -1,0 +1,108 @@
+﻿{
+    "appId":  "20261102013459",
+    "tier":  "Standard Applicant (Locked)",
+    "username":  "john",
+    "email":  "somanath959@gmail.com",
+    "fullName":  "",
+    "gender":  "",
+    "birthdate":  "",
+    "age":  "",
+    "resumeName":  "",
+    "profilePhotoName":  "",
+    "bio":  "",
+    "phone":  "",
+    "website":  "",
+    "officeSearch":  "",
+    "country":  "",
+    "languages":  [
+                      "en"
+                  ],
+    "primaryRole":  "",
+    "profileTheme":  "#2563eb",
+    "satisfactionRating":  "7",
+    "workPreference":  [
+                           "remote"
+                       ],
+    "subscribe":  true,
+    "interviewTime":  "10:00",
+    "discussionSlot":  "",
+    "startMonth":  "",
+    "onboardingWeek":  "",
+    "termsAgreed":  false,
+    "status":  "draft",
+    "submittedAt":  null,
+    "lastUpdated":  "2026-11-01T20:05:05.443Z",
+    "applicantMetadata":  {
+                              "captureTimestampUtc":  "2026-11-01T20:05:05.429Z",
+                              "captureTimestampLocal":  "11/2/2026, 1:35:05 AM",
+                              "captureEpochMs":  1793563505429,
+                              "triggerAction":  "autosave",
+                              "formCompletionPercent":  0,
+                              "activeStepIndex":  1,
+                              "activeStepTitle":  "Account Credentials",
+                              "network":  {
+                                              "clientIp":  "127.0.0.1",
+                                              "onlineStatus":  "online",
+                                              "effectiveType":  "3g",
+                                              "downlinkMbps":  1.35,
+                                              "rttMs":  300,
+                                              "saveDataMode":  false
+                                          },
+                              "location":  {
+                                               "timeZone":  "Asia/Calcutta",
+                                               "timeZoneOffsetMinutes":  -330,
+                                               "timeZoneFormatted":  "UTC+05:30",
+                                               "approximateRegion":  "Asia (Calcutta)",
+                                               "locale":  "en-US",
+                                               "systemLanguages":  [
+                                                                       "en-US",
+                                                                       "en-IN"
+                                                                   ],
+                                               "geoCoordinates":  {
+                                                                      "latitude":  null,
+                                                                      "longitude":  null,
+                                                                      "status":  "pending_or_unsupported"
+                                                                  }
+                                           },
+                              "deviceAndHardware":  {
+                                                        "userAgent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.144.0 Chrome/150.0.7871.250 Electron/43.8.3 Safari/537.36",
+                                                        "platform":  "Win32",
+                                                        "screenResolution":  "1920x1080",
+                                                        "availableScreenSize":  "1920x1032",
+                                                        "windowViewportSize":  "924x688",
+                                                        "devicePixelRatio":  1.25,
+                                                        "colorDepthBits":  24,
+                                                        "screenOrientation":  "landscape-primary",
+                                                        "logicalCpuCores":  8,
+                                                        "deviceMemoryGb":  8,
+                                                        "maxTouchPoints":  10,
+                                                        "isTouchDevice":  true,
+                                                        "pdfViewerEnabled":  false
+                                                    },
+                              "sessionTelemetry":  {
+                                                       "sessionId":  "cd39bc77-27a1-48f2-91a4-63e8e27648c6",
+                                                       "sessionDurationSeconds":  6,
+                                                       "sessionDurationFormatted":  "6s",
+                                                       "referrer":  "direct_navigation",
+                                                       "currentUrl":  "file:///c%3A/Users/soman/Workspace/Learning/Career%20Portal/Application.html?verified=true\u0026email=somanath959%40gmail.com\u0026username=john",
+                                                       "protocol":  "file:"
+                                                   },
+                              "securityAndCompliance":  {
+                                                            "csrfToken":  "9059ec6b-2cf9-447c-a2b5-9a2ae8db6766",
+                                                            "cookiesEnabled":  true,
+                                                            "doNotTrack":  "unspecified",
+                                                            "integrityAlgorithm":  "SHA-256"
+                                                        },
+                              "clientIp":  "127.0.0.1",
+                              "serverInspection":  {
+                                                       "clientIp":  "127.0.0.1",
+                                                       "clientPort":  61022,
+                                                       "httpProtocol":  "1.1",
+                                                       "userAgent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.144.0 Chrome/150.0.7871.250 Electron/43.8.3 Safari/537.36",
+                                                       "serverHostname":  "DESKTOP-9ELPTTS",
+                                                       "serverReceivedAtUtc":  "2026-11-01T20:05:05.496Z",
+                                                       "serverReceivedAtLocal":  "2026-11-02 01:35:05"
+                                                   }
+                          },
+    "integrityChecksum":  "27b9209e4091f98c2cc52fd348226b5f735cb33c27b45c9bd2195c8e1d54c0c4"
+}
