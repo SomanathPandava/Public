@@ -54,7 +54,7 @@ http://localhost:8080/
 ```
 Career Portal/
   index.html                    - Main Career Portal application
-  Learning_html.html            - Source development template
+  Application.html              - Application form & career portal template
   server.ps1                    - Lightweight PowerShell REST server & API
   README.md                     - Project documentation
   images/                       - SVG icons and visual assets

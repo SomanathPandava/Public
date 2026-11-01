@@ -305,7 +305,7 @@ try {
         # Static File Serving
         $localPath = $urlPath.TrimStart('/')
         if ([string]::IsNullOrWhiteSpace($localPath)) {
-            $localPath = if (Test-Path (Join-Path $currentDir "index.html")) { "index.html" } else { "Learning_html.html" }
+            $localPath = if (Test-Path (Join-Path $currentDir "index.html")) { "index.html" } else { "Application.html" }
         }
 
         $filePath = Join-Path $currentDir $localPath
